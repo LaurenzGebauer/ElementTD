@@ -1,0 +1,60 @@
+spritesheet.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+walkingse
+  rotate: false
+  xy: 142, 1
+  size: 50, 68
+  orig: 128, 128
+  offset: 38, 25
+  index: 0
+walkingse
+  rotate: false
+  xy: 50, 1
+  size: 48, 70
+  orig: 128, 128
+  offset: 41, 24
+  index: 1
+walkingse
+  rotate: false
+  xy: 1, 1
+  size: 48, 72
+  orig: 128, 128
+  offset: 42, 23
+  index: 4
+walkingse
+  rotate: false
+  xy: 95, 145
+  size: 46, 70
+  orig: 128, 128
+  offset: 43, 24
+  index: 2
+walkingse
+  rotate: false
+  xy: 1, 74
+  size: 46, 72
+  orig: 128, 128
+  offset: 43, 23
+  index: 5
+walkingse
+  rotate: false
+  xy: 1, 147
+  size: 46, 72
+  orig: 128, 128
+  offset: 43, 23
+  index: 3
+walkingse
+  rotate: false
+  xy: 48, 145
+  size: 46, 70
+  orig: 128, 128
+  offset: 43, 24
+  index: 6
+walkingse
+  rotate: false
+  xy: 48, 74
+  size: 50, 70
+  orig: 128, 128
+  offset: 39, 24
+  index: 7

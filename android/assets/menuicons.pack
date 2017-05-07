@@ -1,0 +1,61 @@
+
+menuicons.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+arrow
+  rotate: false
+  xy: 1, 305
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+cannon
+  rotate: false
+  xy: 1, 153
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+darkness
+  rotate: false
+  xy: 153, 305
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+earth
+  rotate: false
+  xy: 1, 1
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+fire
+  rotate: false
+  xy: 153, 153
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+light
+  rotate: false
+  xy: 305, 305
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+nature
+  rotate: false
+  xy: 153, 1
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+water
+  rotate: false
+  xy: 305, 153
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,12 @@
+test.png
+size: 807, 1331
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+skeleton
+  rotate: false
+  xy: 1, 1
+  size: 805, 1329
+  orig: 832, 1344
+  offset: 15, 0
+  index: -1
