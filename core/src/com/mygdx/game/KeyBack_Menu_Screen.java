@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class MyGdxGame4 extends Game {
+public class KeyBack_Menu_Screen extends Game {
 
     SpriteBatch batch; //Wenn ein Actor gezeichnet werden soll
 
@@ -14,7 +14,7 @@ public class MyGdxGame4 extends Game {
      * Lädt alle relevanten Datein (Konstruktor)
      */
     public void create() {
-        this.setScreen(new Start(this));
+        this.setScreen(new Menu_Screen(this));
         batch = new SpriteBatch();
     }
 

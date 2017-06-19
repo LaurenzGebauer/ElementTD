@@ -1,7 +1,6 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
@@ -10,27 +9,40 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
  */
 public class Controller extends DragListener  {
 
-    Start2 start2;
+    Spiel_Screen spielScreen;
     Model model;
 
-
-    public Controller(Start2 start2,Model model){
-        this.start2 =  start2;
+    /**
+     * @param spielScreen
+     * @param model
+     */
+    public Controller(Spiel_Screen spielScreen, Model model) {
+        this.spielScreen = spielScreen;
         this.model = model;
 
     }
 
+    /**
+     * Methoden die sich aufruft wenn ein Objekt gezogen wird
+     * @param
+     * @param
+     */
     public void drag(InputEvent event, float x, float y, int pointer) {
 
-        start2.getCamera().unproject(start2.getTouchPoint().set(Gdx.input.getX(), Gdx.input.getY(), 0));
-        start2.getSourceImage().moveBy(x - start2.getSourceImage().getWidth() / 2, y - start2.getSourceImage().getHeight() / 2); //erspart sich das setzen von final
+        spielScreen.getCamera().unproject(spielScreen.getTouchPoint().set(Gdx.input.getX(), Gdx.input.getY(), 0));
+        spielScreen.getSourceImage().moveBy(x - spielScreen.getSourceImage().getWidth() / 2, y - spielScreen.getSourceImage().getHeight() / 2); //erspart sich das setzen von final
 
     }
 
+    /**
+     *Methode die verwendetet wird wenn das gezogene Objekt zum Stillstand kommt
+     * @param
+     * @param
+     */
     public void dragStop(InputEvent event, float x, float y, int pointer) {
-//        if (model.pointInRectangles(start2.getRects(), start2.getTouchPoint().x, start2.getTouchPoint().y)) {
-//            start2.getSourceImage().remove();
+//        if (model.pointInRectangles(spielScreen.getRects(), spielScreen.getTouchPoint().x, spielScreen.getTouchPoint().y)) {
+//            spielScreen.getSourceImage().remove();
 //        }
-//        else start2.getSourceImage().clearListeners();
+//        else spielScreen.getSourceImage().clearListeners();
     }
 }

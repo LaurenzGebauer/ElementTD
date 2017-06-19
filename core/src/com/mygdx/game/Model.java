@@ -7,19 +7,16 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 
 /**
  * Created by Laurenz on 01.12.2015.
  */
 public class Model {
 
-    Start2 start;
+    Spiel_Screen start;
 
 
-    public Model(Start2 start){
+    public Model(Spiel_Screen start) {
         this.start= start;
     }
 

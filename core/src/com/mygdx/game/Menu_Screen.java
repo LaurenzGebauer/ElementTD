@@ -21,9 +21,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 /**
  * Created by Laurenz on 15.11.2015.
  */
-public class Start implements Screen {
+public class Menu_Screen implements Screen {
 
-    final MyGdxGame4 game;
+    final KeyBack_Menu_Screen game;
     Stage stage;
     OrthographicCamera camera;
     TextButton tb;
@@ -34,7 +34,7 @@ public class Start implements Screen {
      * Konstruktor, gleicht der create- Methode
      * @param g
      */
-    public Start(MyGdxGame4 g) {
+    public Menu_Screen(KeyBack_Menu_Screen g) {
         game = g;
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
@@ -50,7 +50,7 @@ public class Start implements Screen {
         skin.getFont("default-font").getData().setScale(3, 3); //Schriftgröße wird geändert
 
         Table table = new Table();
-        tb = new TextButton("Start", skin);
+        tb = new TextButton("Start Game", skin);
         tb.setSize(tb.getWidth() + 300, tb.getHeight() + 100);
         table.row().height(200).width(200);
         tb.setPosition(Gdx.graphics.getWidth() / 2 - tb.getWidth() / 2, Gdx.graphics.getHeight() / 2 - tb.getHeight() / 2); //Mitte von Bildschirm
@@ -62,7 +62,7 @@ public class Start implements Screen {
         //Wenn TextButton gedrückt nächster Bildschirm
         tb.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new Start2(game));
+                game.setScreen(new Spiel_Screen(game));
                 return true;
             }
         });

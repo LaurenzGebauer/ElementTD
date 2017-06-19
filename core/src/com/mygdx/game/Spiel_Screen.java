@@ -5,7 +5,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,47 +14,38 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-
-import java.awt.SystemTray;
 
 
 /**
  * Created by Laurenz on 15.11.2015.
  */
 
-public class Start2 extends ApplicationAdapter implements Screen {
+public class Spiel_Screen extends ApplicationAdapter implements Screen {
     //MVC
     private Model model;
     private Controller controller;
     //Screen Elemente
-    private MyGdxGame4 game;
+    private KeyBack_Menu_Screen game;
     private Stage stage;
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer renderer;
@@ -85,7 +75,8 @@ public class Start2 extends ApplicationAdapter implements Screen {
     private TextureAtlas menu,menuicons;
     private TextureRegion tablem;
     private Skin uiskin;
-
+    private Array<ImageButton> testbutton;
+    private ImageButton.ImageButtonStyle tb, tb1, tb2, tb3, tb4, tb5, tb6, tb7, tb8;
     public Array<ImageButton> getTestbutton() {
         return testbutton;
     }
@@ -94,8 +85,7 @@ public class Start2 extends ApplicationAdapter implements Screen {
         this.testbutton = testbutton;
     }
 
-    private Array<ImageButton> testbutton;
-    private ImageButton.ImageButtonStyle tb,tb1,tb2,tb3,tb4,tb5,tb6,tb7,tb8;
+
 
     public Array<ImageButton.ImageButtonStyle> getTestbuttonstyle() {
         return testbuttonstyle;
@@ -107,7 +97,7 @@ public class Start2 extends ApplicationAdapter implements Screen {
 
     private Array<ImageButton.ImageButtonStyle> testbuttonstyle;
 
-    public Start2(MyGdxGame4 g) {
+    public Spiel_Screen(KeyBack_Menu_Screen g) {
     //MVC Objects
         this.game = g;
         stage = new Stage();
@@ -310,7 +300,7 @@ public class Start2 extends ApplicationAdapter implements Screen {
         renderer.setView(camera);
 
         stateTime += Gdx.graphics.getDeltaTime();           // #15
-        currentFrame = walkAnimation.getKeyFrame(stateTime, true);  // #16
+        currentFrame = (TextureRegion) walkAnimation.getKeyFrame(stateTime, true);  // #16
 
         //System.out.println("X   "+sourceImage.getX()+"Y"+ sourceImage.getY());
         renderer.render();
@@ -320,8 +310,6 @@ public class Start2 extends ApplicationAdapter implements Screen {
 
 
         vec = getStageLocation(testbutton.get(2));
-
-
 
 
         spriteBatch.begin();
@@ -335,11 +323,12 @@ public class Start2 extends ApplicationAdapter implements Screen {
          * Back to the first Screen
          */
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            game.setScreen(new Start(game));
+            game.setScreen(new Menu_Screen(game));
         }
 
     }
 
+    //Getter und Setter Methoden
     public Array<Rectangle> getStarts() {
         return starts;
     }
