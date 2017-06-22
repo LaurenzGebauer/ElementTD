@@ -23,10 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  */
 public class Menu_Screen implements Screen {
 
-    final KeyBack_Menu_Screen game;
+    Controller controller;
+    Model model;
     Stage stage;
     OrthographicCamera camera;
-    TextButton tb;
+    private KeyBack_Menu_Screen game;
+
+    private TextButton tb;
     private Texture texture;
     private SpriteBatch batch;
 
@@ -39,16 +42,22 @@ public class Menu_Screen implements Screen {
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
         stage = new Stage();
-        Gdx.input.setInputProcessor(stage); //Wird für Listeners und Dateiaufruf gebraucht
-        Skin skin = new Skin(Gdx.files.internal("uiskin.json")); //Skins für Actor
 
-        camera = new OrthographicCamera(); //Setzt Kamera
+
+         Skin skin = new Skin(Gdx.files.internal("uiskin.json")); //Skins für Actor
+
+        camera = new OrthographicCamera();      //Setzt Kamera
         camera.setToOrtho(false, 1920, 1080); //Kameragröße
         camera.update();
 
+        controller= new Controller(this,model,game);
+        //All Events will be Handeld by Controller Class
+        Gdx.input.setInputProcessor(controller);
 
-        skin.getFont("default-font").getData().setScale(3, 3); //Schriftgröße wird geändert
+        //Schriftgröße wird geändert
+        skin.getFont("default-font").getData().setScale(3, 3);
 
+        //Tabelle und Button wird erstellt und Positioniert
         Table table = new Table();
         tb = new TextButton("Start Game", skin);
         tb.setSize(tb.getWidth() + 300, tb.getHeight() + 100);
@@ -57,15 +66,12 @@ public class Menu_Screen implements Screen {
         table.add(tb);
         table.setFillParent(true);
 
-        texture = new Texture(Gdx.files.internal("ele.jpg"));  //Hintergrundbild
+        //Hintergrundbild
+        texture = new Texture(Gdx.files.internal("ele.jpg"));
 
-        //Wenn TextButton gedrückt nächster Bildschirm
-        tb.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new Spiel_Screen(game));
-                return true;
-            }
-        });
+         //Actors werden Listener hinzugefügt
+        tb.addListener(controller);
+
         //Wird der Stage hinzugefügt (Layout - Behälter)
         stage.addActor(tb);
         stage.addActor(table);
@@ -116,5 +122,13 @@ public class Menu_Screen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public TextButton getTb() {
+        return tb;
+    }
+
+    public void setTb(TextButton tb) {
+        this.tb = tb;
     }
 }

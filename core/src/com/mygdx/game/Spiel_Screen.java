@@ -34,6 +34,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 /**
@@ -77,54 +80,47 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
     private Skin uiskin;
     private Array<ImageButton> testbutton;
     private ImageButton.ImageButtonStyle tb, tb1, tb2, tb3, tb4, tb5, tb6, tb7, tb8;
+    private Table table;
+    final Table table2 = new Table();
+    private Viewport viewport;
+    private int mapPixelHeight,mapPixelWidth;
+
     public Array<ImageButton> getTestbutton() {
         return testbutton;
     }
 
-    public void setTestbutton(Array<ImageButton> testbutton) {
-        this.testbutton = testbutton;
-    }
-
-
-
-    public Array<ImageButton.ImageButtonStyle> getTestbuttonstyle() {
-        return testbuttonstyle;
-    }
-
-    public void setTestbuttonstyle(Array<ImageButton.ImageButtonStyle> testbuttonstyle) {
-        this.testbuttonstyle = testbuttonstyle;
-    }
 
     private Array<ImageButton.ImageButtonStyle> testbuttonstyle;
 
     public Spiel_Screen(KeyBack_Menu_Screen g) {
     //MVC Objects
         this.game = g;
-        stage = new Stage();
         model = new Model(this);
-        controller= new Controller(this,model);
-
-        Gdx.input.setInputProcessor(stage);
+        controller= new Controller(this,model,game);
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin.getFont("default-font").getData().setScale(3, 3);
-    //Tiled Map
+     //Tiled Map wird geladen und dessen Informartion geholten
         tiledMap = new TmxMapLoader().load("ele.tmx");
         MapProperties prop = tiledMap.getProperties();
-
+    //Dimension(Anzahl) der Tiles
         int mapWidth = prop.get("width", Integer.class);
         int mapHeight = prop.get("height", Integer.class);
+     //Größe eines Tiles
         int tilePixelWidth = prop.get("tilewidth", Integer.class);
         int tilePixelHeight = prop.get("tileheight", Integer.class);
-
-        int mapPixelWidth = mapWidth * tilePixelWidth;
-        int mapPixelHeight = mapHeight * tilePixelHeight;
-
+    //Auflösung wird Berrechnet Tiles * Anzahl der Tiles z.B 1980/1080
+         mapPixelWidth = mapWidth * tilePixelWidth;
+         mapPixelHeight = mapHeight * tilePixelHeight;
+        Gdx.input.setInputProcessor(stage);
+     // Tiledmap wird gerendert (Sonst kann nicht angezeigt werden)
         renderer = new OrthogonalTiledMapRenderer(tiledMap);
     //Camera
+        stage = new Stage(new StretchViewport(mapPixelWidth+360, mapPixelHeight)); //+360 Wegen Tabellengröße Width
         camera = new OrthographicCamera();
         camera.setToOrtho(false, stage.getWidth(), stage.getHeight());
         camera.update();
     //Gui Elements
+
         starts = new Array<Rectangle>();
         starts = model.getTiledObjects(tiledMap,starts,"position");
 
@@ -135,36 +131,37 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
         skin.add("hero", new Texture("Hero.png"));
 
-
-
-
-        //sourceImage.setPosition(-20,-20);
+     //sourceImage.setPosition(-20,-20);
 
         label = new Label("Hey", skin);
         gold= new Label("Gold  :", skin);
         life= new Label("Life  :", skin);
-
+      //NPC startPosition
         label.setPosition(starts.get(0).x, starts.get(0).y);
-
+        //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
         ac = new MoveToAction();
         ac.setPosition(starts.get(1).x, starts.get(1).y);
         ac.setDuration(3);
         label.addAction(ac);
 
-        final Table table = new Table();
+    //Tower_Menü
+        table = new Table();
+        table.defaults().height(stage.getHeight());
         table.setFillParent(true);
-        final Table table2 = new Table();
         table2.add(gold).pad(15);
         table2.add(life).pad(15);
         table2.row();
 
 
         menu = new TextureAtlas("menu.pack");
+        //Tower_Menü Hintergrundbild
         tablem = menu.findRegion("wood");
 
         menuicons = new TextureAtlas("menuicons.pack");
         uiskin = new Skin(menuicons);
         testbuttonstyle= new Array<ImageButton.ImageButtonStyle>();
+
+        //Tower_Menu_Buttons werden Deklariert
         tb = new ImageButton.ImageButtonStyle();
         tb1 = new ImageButton.ImageButtonStyle();
         tb2 = new ImageButton.ImageButtonStyle();
@@ -174,7 +171,7 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         tb6 = new ImageButton.ImageButtonStyle();
         tb7 = new ImageButton.ImageButtonStyle();
         tb8 = new ImageButton.ImageButtonStyle();
-
+        //Bilder werden den Tower_Buttons hinzugefügt
         tb.up  = uiskin.getDrawable("arrow");
         testbuttonstyle.add(tb);
         tb2.up  = uiskin.getDrawable("cannon");
@@ -198,12 +195,12 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         sourceImage.setSize(150, 150);
         sourceImage.setVisible(false);
 
+        //Tower_Buttons werden der Tabelle hinzugfügt
           for(int i=0;i<menuicons.getRegions().size;i++){
-          ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
+                ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
+                 testbutton.add(item1Button);
 
-          testbutton.add(item1Button);
-
-          table2.add(testbutton.get(i)).pad(15);
+          table2.add(testbutton.get(i)).pad(30);
               if(i==1){
                   table2.row();
               }
@@ -222,11 +219,9 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         table2.setBackground(new TextureRegionDrawable(new TextureRegion(tablem)));
         table2.setHeight(stage.getHeight());
         table.add(sourceImage);
-
-
         table.add(table2);
+        table.right();
 
-        table.right().top();
 
     //Animation
         walkSheet = new Texture(Gdx.files.internal("runningcat.png")); // #9
@@ -243,32 +238,14 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         stateTime = 0f;                         // #13
     //Listeners und Stage platzierungen
 
+        System.out.println("DASDASDSADASDSDAS DASDASD ASDASDAD"+ table.getMinWidth() +"Stage"+stage.getWidth()+"StageH  "+stage.getHeight()+"Stage gdx"+Gdx.graphics.getWidth());
+
+
         stage.addActor(label);
         stage.addActor(table);
         stage.addActor(sourceImage);
-
-
         sourceImage.addListener(controller);
 
-        table2.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-               System.out.println("Exampletouch started at (" + x + "   " + y);
-                sourceImage.setPosition(vec.x, vec.y);
-                return false;
-            }
-         });
-
-        testbutton.get(2).addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                sourceImage.setVisible(true);
-
-
-
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-        });
 
     }
 
@@ -291,14 +268,16 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
     @Override
     public void render(float delta) {
-
+        //Prepare Screen
         Gdx.gl.glClearColor(0.55f, 0.55f, 0.55f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
         //sr.setProjectionMatrix(camera.combined);
+
         renderer.setView(camera);
 
+        //Animation Bewegung
         stateTime += Gdx.graphics.getDeltaTime();           // #15
         currentFrame = (TextureRegion) walkAnimation.getKeyFrame(stateTime, true);  // #16
 
@@ -365,12 +344,24 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
     public void setTouchPoint(Vector3 touchPoint) {
         this.touchPoint = touchPoint;
     }
+    public void setTestbutton(Array<ImageButton> testbutton) {
+        this.testbutton = testbutton;
+    }
+    public Array<ImageButton.ImageButtonStyle> getTestbuttonstyle() {
+        return testbuttonstyle;
+    }
+    public void setTestbuttonstyle(Array<ImageButton.ImageButtonStyle> testbuttonstyle) {
+        this.testbuttonstyle = testbuttonstyle;
+    }
+
     @Override
     public void show() {
 
     }
     @Override
     public void resize(int width, int height) {
+
+        stage.getViewport().update(width, height, false);
     }
     @Override
     public void pause() {

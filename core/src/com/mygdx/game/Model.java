@@ -21,6 +21,7 @@ public class Model {
     }
 
     /**
+     * Methode um die Karte in Rectangle zu unterteilen um gültige Bereiche zu Definieren
      * Return die Rectangle Map-Objekte
      * @param tiledMap
      * @param starts
@@ -37,7 +38,7 @@ public class Model {
     }
     /**
      *
-     * Ließt  die Aktuellen Positionen der Objekte im Parameter aus und überprüft ob sie bei einer bestimmten Position matchen
+     * NPC's Laufen Route ab
      * @param label
      * @param rec
      */
