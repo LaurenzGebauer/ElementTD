@@ -23,8 +23,8 @@ public class Model {
     /**
      * Methode um die Karte in Rectangle zu unterteilen um gültige Bereiche zu Definieren
      * Return die Rectangle Map-Objekte
-     * @param tiledMap
-     * @param starts
+     * @param tiledMap Karte
+     * @param starts   Rectangle Array mit enthalten Tiles
      * @param tiledobject
      * @return
      */
@@ -42,7 +42,7 @@ public class Model {
      * @param label
      * @param rec
      */
-    public void checkpos(MoveToAction ac , Label label, Array<Rectangle> rec) {
+    public void npc_route_running(MoveToAction ac , Label label, Array<Rectangle> rec) {
         if ((int) label.getX() == (int) rec.get(1).x && (int) label.getY() == (int) rec.get(1).y) {
             label.removeAction(ac);
             ac = new MoveToAction();

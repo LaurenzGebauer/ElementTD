@@ -10,10 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.kotcrab.vis.ui.widget.Menu;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 /**
  * Created by Laurenz on 01.12.2015.
  */
-public class Controller extends DragListener implements InputProcessor {
+public class Controller extends DragListener  {
 
     Spiel_Screen spielScreen;
     Menu_Screen menuScreen;
@@ -29,55 +32,6 @@ public class Controller extends DragListener implements InputProcessor {
         this.model = model;
         this.game = game;
    }
-    public Controller(Menu_Screen menuScreen, Model model, KeyBack_Menu_Screen game) {
-        this.menuScreen = menuScreen;
-         this.model = model;
-        this.game = game;
-
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    public boolean touchDown (int x, int y, int pointer, int button) {
-
-            game.setScreen(new Spiel_Screen(game));
-
-
-        return true;
-
-    }
-
-    public boolean touchUp (int x, int y, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
 
 
     /**
@@ -87,8 +41,8 @@ public class Controller extends DragListener implements InputProcessor {
      */
     public void drag(InputEvent event, float x, float y, int pointer) {
 
-        spielScreen.getCamera().unproject(spielScreen.getTouchPoint().set(Gdx.input.getX(), Gdx.input.getY(), 0));
-        spielScreen.getSourceImage().moveBy(x - spielScreen.getSourceImage().getWidth() / 2, y - spielScreen.getSourceImage().getHeight() / 2); //erspart sich das setzen von final
+//        spielScreen.getCamera().unproject(spielScreen.getTouchPoint().set(Gdx.input.getX(), Gdx.input.getY(), 0));
+//        spielScreen.getSourceImage().moveBy(x - spielScreen.getSourceImage().getWidth() / 2, y - spielScreen.getSourceImage().getHeight() / 2); //erspart sich das setzen von final
 
     }
 
@@ -103,4 +57,9 @@ public class Controller extends DragListener implements InputProcessor {
 //        }
 //        else spielScreen.getSourceImage().clearListeners();
     }
+
+//    @Override
+//    public void stateChanged(ChangeEvent e) {
+//        System.out.println("Jude");
+//    }
 }

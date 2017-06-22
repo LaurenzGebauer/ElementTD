@@ -22,8 +22,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -31,10 +29,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -162,6 +158,7 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         testbuttonstyle= new Array<ImageButton.ImageButtonStyle>();
 
         //Tower_Menu_Buttons werden Deklariert
+
         tb = new ImageButton.ImageButtonStyle();
         tb1 = new ImageButton.ImageButtonStyle();
         tb2 = new ImageButton.ImageButtonStyle();
@@ -191,14 +188,14 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
         testbutton = new Array<ImageButton>();
 
-        sourceImage = new Image(uiskin, "fire");
-        sourceImage.setSize(150, 150);
-        sourceImage.setVisible(false);
+        Rectangle rec= new Rectangle();
 
-        //Tower_Buttons werden der Tabelle hinzugfügt
+         //Tower_Buttons werden der Tabelle hinzugfügt
           for(int i=0;i<menuicons.getRegions().size;i++){
                 ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
-                 testbutton.add(item1Button);
+                testbutton.add(item1Button);
+                testbutton.get(i).addListener(controller);
+
 
           table2.add(testbutton.get(i)).pad(30);
               if(i==1){
@@ -218,7 +215,6 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
         table2.setBackground(new TextureRegionDrawable(new TextureRegion(tablem)));
         table2.setHeight(stage.getHeight());
-        table.add(sourceImage);
         table.add(table2);
         table.right();
 
@@ -238,16 +234,9 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         stateTime = 0f;                         // #13
     //Listeners und Stage platzierungen
 
-        System.out.println("DASDASDSADASDSDAS DASDASD ASDASDAD"+ table.getMinWidth() +"Stage"+stage.getWidth()+"StageH  "+stage.getHeight()+"Stage gdx"+Gdx.graphics.getWidth());
-
-
         stage.addActor(label);
         stage.addActor(table);
-        stage.addActor(sourceImage);
-        sourceImage.addListener(controller);
-
-
-    }
+     }
 
     public static Vector2 getStageLocation(Actor actor) {
         return actor.localToStageCoordinates(new Vector2(0, 0));
@@ -292,8 +281,8 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
 
         spriteBatch.begin();
-        model.checkpos(ac , label,starts);
-        //checkpos(label, starts);
+        model.npc_route_running(ac , label,starts);
+        //npc_route_running(label, starts);
         spriteBatch.draw(currentFrame, 0 , 0);
 
         spriteBatch.end();
@@ -360,7 +349,6 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
     }
     @Override
     public void resize(int width, int height) {
-
         stage.getViewport().update(width, height, false);
     }
     @Override

@@ -10,12 +10,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 
 /**
@@ -29,7 +30,7 @@ public class Menu_Screen implements Screen {
     OrthographicCamera camera;
     private KeyBack_Menu_Screen game;
 
-    private TextButton tb;
+    private TextButton menu_screen_buttton,menu_screen_highscore_button;
     private Texture texture;
     private SpriteBatch batch;
 
@@ -40,6 +41,7 @@ public class Menu_Screen implements Screen {
     public Menu_Screen(KeyBack_Menu_Screen g) {
         game = g;
         camera = new OrthographicCamera();
+
         batch = new SpriteBatch();
         stage = new Stage();
 
@@ -50,31 +52,43 @@ public class Menu_Screen implements Screen {
         camera.setToOrtho(false, 1920, 1080); //Kameragröße
         camera.update();
 
-        controller= new Controller(this,model,game);
+
         //All Events will be Handeld by Controller Class
-        Gdx.input.setInputProcessor(controller);
+        Gdx.input.setInputProcessor(stage);
 
         //Schriftgröße wird geändert
         skin.getFont("default-font").getData().setScale(3, 3);
 
         //Tabelle und Button wird erstellt und Positioniert
-        Table table = new Table();
-        tb = new TextButton("Start Game", skin);
-        tb.setSize(tb.getWidth() + 300, tb.getHeight() + 100);
-        table.row().height(200).width(200);
-        tb.setPosition(Gdx.graphics.getWidth() / 2 - tb.getWidth() / 2, Gdx.graphics.getHeight() / 2 - tb.getHeight() / 2); //Mitte von Bildschirm
-        table.add(tb);
-        table.setFillParent(true);
+//        Table table = new Table();
+        menu_screen_buttton = new TextButton("Start Game", skin);
+        menu_screen_highscore_button = new TextButton("Highscore", skin);
+        menu_screen_buttton.setSize(menu_screen_buttton.getWidth() + 300, menu_screen_buttton.getHeight() + 100);
+        menu_screen_highscore_button.setSize(menu_screen_highscore_button.getWidth() + 200, menu_screen_highscore_button.getHeight() + 100);
+        menu_screen_buttton.setPosition(Gdx.graphics.getWidth() / 2 - menu_screen_buttton.getWidth() / 2, Gdx.graphics.getHeight() / 2 - menu_screen_buttton.getHeight() / 2); //Mitte von Bildschirm
+        menu_screen_highscore_button.setPosition(Gdx.graphics.getWidth()-100  - menu_screen_buttton.getWidth() / 2, Gdx.graphics.getHeight() -100 - menu_screen_buttton.getHeight() / 2); //Oben Rechts von Bildschirm
+
 
         //Hintergrundbild
         texture = new Texture(Gdx.files.internal("ele.jpg"));
 
          //Actors werden Listener hinzugefügt
-        tb.addListener(controller);
+        menu_screen_buttton.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+                game.setScreen(new Spiel_Screen(game));
+            }
+        });
+        menu_screen_highscore_button.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+               //Show Highscore Screen
+            }
+        });
 
         //Wird der Stage hinzugefügt (Layout - Behälter)
-        stage.addActor(tb);
-        stage.addActor(table);
+        stage.addActor(menu_screen_buttton);
+        stage.addActor(menu_screen_highscore_button);
+
+
     }
 
 
@@ -124,11 +138,11 @@ public class Menu_Screen implements Screen {
 
     }
 
-    public TextButton getTb() {
-        return tb;
+    public TextButton getMenu_screen_buttton() {
+        return menu_screen_buttton;
     }
 
-    public void setTb(TextButton tb) {
-        this.tb = tb;
+    public void setMenu_screen_buttton(TextButton menu_screen_buttton) {
+        this.menu_screen_buttton = menu_screen_buttton;
     }
 }
