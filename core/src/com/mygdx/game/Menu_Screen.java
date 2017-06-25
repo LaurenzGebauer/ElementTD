@@ -70,7 +70,7 @@ public class Menu_Screen implements Screen {
 
 
         //Hintergrundbild
-        texture = new Texture(Gdx.files.internal("ele.jpg"));
+        texture = new Texture(Gdx.files.internal("menu_screen.jpg"));
 
          //Actors werden Listener hinzugefügt
         menu_screen_buttton.addListener(new ChangeListener() {
