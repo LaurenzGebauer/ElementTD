@@ -282,6 +282,7 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
         spriteBatch.begin();
         model.npc_route_running(ac , label,starts);
+        //model.npc_route_running(ac, walkAnimation, starts);
         //npc_route_running(label, starts);
         spriteBatch.draw(currentFrame, 0 , 0);
 
@@ -290,9 +291,11 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         /**
          * Back to the first Screen
          */
+        Gdx.input.setCatchBackKey(true);
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
             game.setScreen(new Menu_Screen(game));
         }
+
 
     }
 

@@ -1,9 +1,11 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
@@ -38,19 +40,22 @@ public class Model {
     }
     /**
      *
-     * NPC's Laufen Route ab
+     * Label läuft Route ab
      * @param label
      * @param rec
      */
     public void npc_route_running(MoveToAction ac , Label label, Array<Rectangle> rec) {
-        if ((int) label.getX() == (int) rec.get(1).x && (int) label.getY() == (int) rec.get(1).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(2).x, rec.get(2).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+        for(int i = 1; i <= 12; i++) {
+            if ((int) label.getX() == (int) rec.get(i).x && (int) label.getY() == (int) rec.get(i).y) {
+                label.removeAction(ac);
+                ac = new MoveToAction();
+                ac.setDuration(3);
+                ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
+                label.addAction(ac);
+                //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+            }
         }
+        /*
         if ((int) label.getX() == (int) rec.get(2).x && (int) label.getY() == (int) rec.get(2).y) {
             label.removeAction(ac);
             ac = new MoveToAction();
@@ -138,6 +143,26 @@ public class Model {
             ac.setPosition(rec.get(12).x, rec.get(12).y);
             label.addAction(ac);
             //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+        }
+        */
+    }
+
+    /**
+     *
+     * NPC's Laufen Route ab
+     * @param npc
+     * @param rec
+     */
+    public void npc_route_running(MoveToAction ac , Actor npc, Array<Rectangle> rec) {
+        for(int i = 1; i <= 12; i++) {
+            if ((int) npc.getX() == (int) rec.get(i).x && (int) npc.getY() == (int) rec.get(i).y) {
+                npc.removeAction(ac);
+                ac = new MoveToAction();
+                ac.setDuration(3);
+                ac.setPosition(rec.get(i + 1).x, rec.get(i + 1).y);
+                npc.addAction(ac);
+                //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+            }
         }
     }
 

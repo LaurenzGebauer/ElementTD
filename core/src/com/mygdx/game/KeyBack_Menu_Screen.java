@@ -11,7 +11,7 @@ public class KeyBack_Menu_Screen extends Game {
 
     @Override
     /**
-     * Lädt alle relevanten Datein (Konstruktor)
+     * Lädt alle relevanten Daten (Konstruktor)
      */
     public void create() {
         this.setScreen(new Menu_Screen(this));
@@ -20,7 +20,7 @@ public class KeyBack_Menu_Screen extends Game {
 
     @Override
     /**
-     * Rendert alle Datein auf den Screen
+     * Rendert alle Daten auf den Screen
      */
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
