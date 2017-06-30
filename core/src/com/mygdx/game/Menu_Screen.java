@@ -76,11 +76,13 @@ public class Menu_Screen implements Screen {
         menu_screen_buttton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
                 game.setScreen(new Spiel_Screen(game));
+
             }
         });
         menu_screen_highscore_button.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
                //Show Highscore Screen
+               System.out.println(actor.getName());
             }
         });
 
@@ -91,8 +93,7 @@ public class Menu_Screen implements Screen {
 
     }
 
-
-    @Override
+     @Override
     public void show() {
 
     }

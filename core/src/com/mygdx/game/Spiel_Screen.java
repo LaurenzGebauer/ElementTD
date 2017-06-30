@@ -89,49 +89,55 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
     private Array<ImageButton.ImageButtonStyle> testbuttonstyle;
 
     public Spiel_Screen(KeyBack_Menu_Screen g) {
-        //MVC Objects
+    //MVC Objects
         this.game = g;
         model = new Model(this);
         controller= new Controller(this,model,game);
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin.getFont("default-font").getData().setScale(3, 3);
-        //Tiled Map wird geladen und dessen Informartion geholten
-        tiledMap = new TmxMapLoader().load("map_new.tmx");
+     //Tiled Map wird geladen und dessen Informartion geholten
+        tiledMap = new TmxMapLoader().load("ele.tmx");
         MapProperties prop = tiledMap.getProperties();
-        //Dimension(Anzahl) der Tiles
+    //Dimension(Anzahl) der Tiles
         int mapWidth = prop.get("width", Integer.class);
         int mapHeight = prop.get("height", Integer.class);
-        //Größe eines Tiles
+     //Größe eines Tiles
         int tilePixelWidth = prop.get("tilewidth", Integer.class);
         int tilePixelHeight = prop.get("tileheight", Integer.class);
-        //Auflösung wird Berrechnet Tiles * Anzahl der Tiles z.B 1980/1080
-        mapPixelWidth = mapWidth * tilePixelWidth;
-        mapPixelHeight = mapHeight * tilePixelHeight;
-        Gdx.input.setInputProcessor(stage);
-        // Tiledmap wird gerendert (Sonst kann nicht angezeigt werden)
+    //Auflösung wird Berrechnet Tiles * Anzahl der Tiles z.B 1980/1080
+         mapPixelWidth = mapWidth * tilePixelWidth;
+         mapPixelHeight = mapHeight * tilePixelHeight;
+
+     // Tiledmap wird gerendert (Sonst kann nicht angezeigt werden)
         renderer = new OrthogonalTiledMapRenderer(tiledMap);
+    //Camera
+
+
         //Camera
         stage = new Stage(new StretchViewport(mapPixelWidth+360, mapPixelHeight)); //+360 Wegen Tabellengröße Width
         camera = new OrthographicCamera();
         camera.setToOrtho(false, stage.getWidth(), stage.getHeight());
         camera.update();
-        //Gui Elements
 
         starts = new Array<Rectangle>();
         starts = model.getTiledObjects(tiledMap,starts,"position");
 
         rects = new Array<Rectangle>();
-        rects = model.getTiledObjects(tiledMap,starts,"towers");
+        rects = model.getTiledObjects(tiledMap,rects,"valid");
+
+
 
         touchPoint = new Vector3();
 
         skin.add("hero", new Texture("Hero.png"));
 
-        //sourceImage.setPosition(-20,-20);
+     //sourceImage.setPosition(-20,-20);
 
         label = new Label("Hey", skin);
         gold= new Label("Gold  :", skin);
         life= new Label("Life  :", skin);
+
+      //NPC startPosition
         //NPC startPosition
         label.setPosition(starts.get(0).x, starts.get(0).y);
         //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
@@ -140,7 +146,7 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         ac.setDuration(3);
         label.addAction(ac);
 
-        //Tower_Menü
+    //Tower_Menü
         table = new Table();
         table.defaults().height(stage.getHeight());
         table.setFillParent(true);
@@ -190,27 +196,35 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
         Rectangle rec= new Rectangle();
 
-        //Tower_Buttons werden der Tabelle hinzugfügt
-        for(int i=0;i<menuicons.getRegions().size;i++){
-            ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
-            testbutton.add(item1Button);
-            testbutton.get(i).addListener(controller);
+         //Tower_Buttons werden der Tabelle hinzugfügt
+          for(int i=0;i<menuicons.getRegions().size;i++){
+                ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
+                testbutton.add(item1Button);
+                testbutton.get(i).setName(""+i);
+                testbutton.get(i).addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                         model.setMode(1);
+                         model.setTowerNumberClicked= actor.getName();
+                         model.changeTowerNumbertoName(model.setTowerNumberClicked);
+                 }});
 
 
-            table2.add(testbutton.get(i)).pad(30);
-            if(i==1){
-                table2.row();
-            }
-            if(i==3){
-                table2.row();
-            }
-            if(i==5){
-                table2.row();
-            }
-            if(i==7){
-                table2.row();
-            }
-        }
+
+          table2.add(testbutton.get(i)).pad(30);
+              if(i==1){
+                  table2.row();
+              }
+              if(i==3){
+                  table2.row();
+              }
+              if(i==5){
+                  table2.row();
+              }
+              if(i==7){
+                  table2.row();
+              }
+          }
 
 
         table2.setBackground(new TextureRegionDrawable(new TextureRegion(tablem)));
@@ -219,7 +233,7 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         table.right();
 
 
-        //Animation
+    //Animation
         walkSheet = new Texture(Gdx.files.internal("runningcat.png")); // #9
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS);              // #10
         walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
@@ -232,11 +246,10 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         walkAnimation = new Animation(0.2f, walkFrames);      // #11
         spriteBatch = new SpriteBatch();                // #12
         stateTime = 0f;                         // #13
-        //Listeners und Stage platzierungen
-
+    //Listeners und Stage platzierungen
         stage.addActor(label);
         stage.addActor(table);
-    }
+     }
 
     public static Vector2 getStageLocation(Actor actor) {
         return actor.localToStageCoordinates(new Vector2(0, 0));

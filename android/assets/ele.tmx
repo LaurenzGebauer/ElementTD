@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="34" tilewidth="32" tileheight="32" nextobjectid="79">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="34" tilewidth="32" tileheight="32" nextobjectid="111">
  <tileset firstgid="1" name="terrain" tilewidth="32" tileheight="32" tilecount="162">
-  <image source="SevenKingdoms_graphics/terrain/I_tpict1.res.png" width="885" height="205"/>
+  <image source="../../../../../SevenKingdoms_graphics/terrain/I_tpict1.res.png" width="885" height="205"/>
  </tileset>
  <tileset firstgid="163" name="extra" tilewidth="32" tileheight="32" tilecount="240">
-  <image source="SevenKingdoms_graphics/terrain/Tree-sprites-standard-terrain.png" width="644" height="391"/>
+  <image source="../../../../../SevenKingdoms_graphics/terrain/Tree-sprites-standard-terrain.png" width="644" height="391"/>
  </tileset>
  <layer name="Kachelebene 1" width="60" height="34">
   <data encoding="csv">
@@ -163,7 +163,7 @@
   <object id="39" x="448" y="36" width="324" height="120"/>
   <object id="40" x="446" y="160" width="162" height="382"/>
   <object id="41" x="610" y="416" width="316" height="126"/>
-  <object id="42" x="768" y="284" width="674" height="126"/>
+  <object id="42" x="766.667" y="288.667" width="674" height="126"/>
   <object id="43" x="1280" y="412" width="164" height="386"/>
   <object id="44" x="448" y="674" width="834" height="124"/>
   <object id="46" x="448" y="800" width="158" height="260"/>
@@ -187,5 +187,10 @@
   <object id="70" x="1669.33" y="86" width="25.3333" height="24"/>
   <object id="71" x="1187.33" y="82" width="25.3333" height="24"/>
   <object id="77" x="1186.33" y="4" width="25.3333" height="24"/>
+ </objectgroup>
+ <objectgroup name="valid">
+  <object id="108" x="610.667" y="290.667" width="154.667" height="128"/>
+  <object id="109" x="768" y="157.333" width="154.667" height="128"/>
+  <object id="110" x="612.242" y="158.788" width="154.667" height="128"/>
  </objectgroup>
 </map>

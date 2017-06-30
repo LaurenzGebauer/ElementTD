@@ -1,9 +1,17 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
@@ -14,6 +22,16 @@ import com.badlogic.gdx.utils.Array;
 public class Model {
 
     Spiel_Screen start;
+    ArrowTower arrowTower;
+
+    private int mMode = UNDEFINED;
+
+    public static final int UNDEFINED = 0;
+    public static final int DRAW_OPEN_FIELDS = 1;
+    public String setTowerNumberClicked = null;
+    public String towerNameClicked ="";
+    private Sprite sprite;
+    private Texture texture;
 
 
     public Model(Spiel_Screen start) {
@@ -21,7 +39,7 @@ public class Model {
     }
 
     /**
-     * Methode um die Karte in Rectangle zu unterteilen um gültige Bereiche zu Definieren
+     * Ließt von Tiled Map die Rectangle aus und erstellt davon Rectangle
      * Return die Rectangle Map-Objekte
      * @param tiledMap Karte
      * @param starts   Rectangle Array mit enthalten Tiles
@@ -34,7 +52,7 @@ public class Model {
                 starts.add(((RectangleMapObject) object).getRectangle());
             }
         }
-        return starts;
+         return starts;
     }
     /**
      *
@@ -142,20 +160,89 @@ public class Model {
     }
 
     /**
-     * Überprüft ob die Kooardinaten mit den Rectangle matchen
+     * Zeichnet Grüne Felder auf Felder wenn sie Frei sind
+     * @param spiel_screen
+     * @param sr
+     * @param spriteBatch
      * @param r
-     * @param x
-     * @param y
+     */
+    public void drawEmptyFields(Spiel_Screen spiel_screen, ShapeRenderer sr, SpriteBatch spriteBatch, Array<Rectangle> r){
+        for (int i = 0; i < r.size; i++) {
+            //Freie Flächen Grün
+            sr.setProjectionMatrix(spriteBatch.getProjectionMatrix());
+            sr.begin(ShapeRenderer.ShapeType.Filled);
+            sr.setColor(Color.GREEN);
+            sr.rect(r.get(i).x-110,r.get(i).y, r.get(i).width,r.get(i).height);
+            sr.end();
+
+        }
+    }
+
+    public void notEmptyFields(){
+
+     }
+
+    /**
+     * Zeichnet den Tower an der Stelle
+     * @param spiel_screen
+     * @param r
+     * @param i
+     */
+    public void drawTower(Spiel_Screen spiel_screen, Array<Rectangle> r , int i){
+
+                spiel_screen.getSpriteBatch().draw(spiel_screen.getUiskin().getRegion(towerNameClicked),r.get(i).x-110 ,r.get(i).y);
+    }
+
+    /**
+     * Nimmt die Tower ID und wandelt es in den passendenden Tower Namen um
+     * @param TowerNumber
      * @return
      */
-    public static boolean pointInRectangles(Array<Rectangle> r, float x, float y) {
-        for (int i = 0; i < r.size; i++) {
-            if (r.get(i).x <= x && r.get(i).x + r.get(i).width >= x && r.get(i).y <= y && r.get(i).y + r.get(i).height >= y)
-                return true;
+    public String changeTowerNumbertoName(String TowerNumber){
+        int num = Integer.parseInt(TowerNumber);
+
+        if(num==0){
+            towerNameClicked="arrow";
+            return "arrow";
         }
-        return false;
+        else
+        if(num==1){
+            towerNameClicked= "cannon";
+        }
+        else
+        if(num==2){
+            towerNameClicked="fire";
+        }
+        else
+        if(num==3){
+            towerNameClicked= "water";
+        }
+        else
+        if(num==4){
+
+            towerNameClicked= "darkness";
+        }
+        else
+        if(num==5){
+            towerNameClicked= "light";
+        }
+        else
+        if(num==6){
+            towerNameClicked= "nature";
+        }
+        else
+        if(num==7){
+            towerNameClicked= "earth";
+        }
+         return towerNameClicked;
+
+      }
+
+    public int getMode() {
+        return mMode;
     }
 
 
+    public void setMode(int _mode) { mMode = _mode; }
 
 }

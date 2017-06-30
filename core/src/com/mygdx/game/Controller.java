@@ -16,7 +16,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Created by Laurenz on 01.12.2015.
  */
-public class Controller extends DragListener  {
+public class Controller extends DragListener implements ChangeListener {
 
     Spiel_Screen spielScreen;
     Menu_Screen menuScreen;
@@ -56,6 +56,11 @@ public class Controller extends DragListener  {
 //            spielScreen.getSourceImage().remove();
 //        }
 //        else spielScreen.getSourceImage().clearListeners();
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        System.out.println("Hi");
     }
 
 //    @Override
