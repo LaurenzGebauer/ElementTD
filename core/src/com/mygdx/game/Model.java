@@ -92,7 +92,7 @@ public class Model {
                 ac = new MoveToAction();
                 ac.setDuration(3);
                 if(i<rec.size-1){
-                    npc.dir = checkDirection(rec.get(i), rec.get(i+1));
+                    npc.setDir(checkDirection(rec.get(i), rec.get(i+1)));
                     ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
                 }
                 else {

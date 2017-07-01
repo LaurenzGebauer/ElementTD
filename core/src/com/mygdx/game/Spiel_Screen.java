@@ -65,6 +65,7 @@ public class Spiel_Screen extends Stage implements Screen {
     private TextureRegion currentFrame;
     private float stateTime;
     private Enemy enemy;
+    private int angle;
     //Shaperenderer
     private ShapeRenderer sr;
     //Gui- Elemente
@@ -305,10 +306,34 @@ public class Spiel_Screen extends Stage implements Screen {
 
         float scaleFactor = 0.5f;
 
+        angle = 0;
+        if (enemy.dir == Enemy.Dir.LEFT) {
+            angle = 180;
+            currentFrame.flip(false, true);
+        } else if (enemy.dir == Enemy.Dir.RIGHT) {
+            angle = 0;
+        } else if (enemy.dir == Enemy.Dir.UP) {
+            angle = 270;
+        } else if (enemy.dir == Enemy.Dir.DOWN) {
+            angle = 90;
+        }
+
         npcSpriteBatch.begin();
         model.npc_route_running(ac, enemy, tiled_npc_fields);
-        npcSpriteBatch.draw(currentFrame, enemy.getX(), enemy.getY(), currentFrame.getRegionWidth() * scaleFactor, currentFrame.getRegionHeight() * scaleFactor);
+        npcSpriteBatch.draw(currentFrame,
+                            enemy.getX(),
+                            enemy.getY(),
+                            currentFrame.getRegionWidth() * scaleFactor,
+                            currentFrame.getRegionHeight() * scaleFactor);
+
+        enemy.draw(npcSpriteBatch, delta);
+
+
         npcSpriteBatch.end();
+
+        currentFrame.flip(false,false);
+
+
 
         /*
         spriteBatch.begin();

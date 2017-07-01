@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class Enemy extends Actor {
 
     protected Animation animatedNpc;
+    protected boolean flipY;
     private int health;
     private int goldReward;
     protected Dir dir;
@@ -38,6 +39,14 @@ public class Enemy extends Actor {
     }
     public void setGoldReward(int goldReward) {
         this.goldReward = goldReward;
+    }
+
+    public Dir getDir() {
+        return dir;
+    }
+    public void setDir(Dir dir) {
+        this.dir = dir;
+        System.out.println("Direction has changed to: " + dir);
     }
 
     public static Enemy createEnemy(Animation animation) {
