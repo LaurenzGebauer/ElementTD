@@ -1,0 +1,12 @@
+menu_bg.png
+size: 370, 642
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+menu_bg
+  rotate: false
+  xy: 1, 1
+  size: 368, 640
+  orig: 368, 640
+  offset: 0, 0
+  index: -1

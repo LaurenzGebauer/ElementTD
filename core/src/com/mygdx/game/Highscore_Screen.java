@@ -1,43 +1,47 @@
 package com.mygdx.game;
 
-/**
- * Created by Laurenz on 15.11.2015.
- */
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
- * Created by Laurenz on 15.11.2015.
+ * Created by Bernhard on 28.06.2017.
  */
-public class Menu_Screen implements Screen {
 
+class Highscore_Screen implements Screen {
+
+    private Label label;
+    private TextureRegion table_bg;
+    private TextureAtlas textureAtlas;
+    private Table table;
+    private BitmapFont title;
     Controller controller;
     Model model;
     Stage stage;
     OrthographicCamera camera;
     private KeyBack_Menu_Screen game;
 
-    private TextButton menu_screen_button, menu_screen_highscore_button;
+    private TextButton back_button;
     private Texture texture;
     private SpriteBatch batch;
 
-    /**
-     * Konstruktor, gleicht der create- Methode
-     *
-     * @param g
-     */
-    public Menu_Screen(KeyBack_Menu_Screen g) {
+
+    public Highscore_Screen(KeyBack_Menu_Screen g) {
+
         game = g;
         camera = new OrthographicCamera();
 
@@ -58,40 +62,47 @@ public class Menu_Screen implements Screen {
         //Schriftgröße wird geändert
         skin.getFont("default-font").getData().setScale(3, 3);
 
-        //Tabelle und Button wird erstellt und Positioniert
-//        Table table = new Table();
-        menu_screen_button = new TextButton("Start Game", skin);
-        menu_screen_highscore_button = new TextButton("Highscore", skin);
-        menu_screen_button.setSize(menu_screen_button.getWidth() + 300, menu_screen_button.getHeight() + 100);
-        menu_screen_highscore_button.setSize(menu_screen_highscore_button.getWidth() + 100, menu_screen_highscore_button.getHeight() + 100);
-        menu_screen_button.setPosition(Gdx.graphics.getWidth() / 2 - menu_screen_button.getWidth() / 2, Gdx.graphics.getHeight() / 2 - menu_screen_button.getHeight() / 2); //Mitte von Bildschirm
-        menu_screen_highscore_button.setPosition(Gdx.graphics.getWidth() - 100 - menu_screen_button.getWidth() / 2, Gdx.graphics.getHeight() - 100 - menu_screen_button.getHeight() / 2); //Oben Rechts von Bildschirm
+        //Button
+        back_button = new TextButton("Back", skin);
+        back_button.setSize(back_button.getWidth() + 100, back_button.getHeight() + 100);
+        back_button.setPosition(Gdx.graphics.getWidth() - 100 - back_button.getWidth() / 2, Gdx.graphics.getHeight() - 100 - back_button.getHeight() / 2); //Oben Rechts von Bildschirm
 
 
         //Hintergrundbild
         texture = new Texture(Gdx.files.internal("menu_screen.jpg"));
 
-        //Actors werden Listener hinzugefügt
-        menu_screen_button.addListener(new ChangeListener() {
-            public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new Spiel_Screen(game));
+        //Tabelle
+        table = new Table();
+        table.defaults().height(stage.getHeight()/2);
+        table.defaults().width(stage.getWidth()/2);
+        table.setFillParent(true);
 
-            }
-        });
-        menu_screen_highscore_button.addListener(new ChangeListener() {
+        label = new Label("Highscore:", skin);
+        table.add(label).pad(15);
+        table.row();
+
+        textureAtlas = new TextureAtlas("highscore_bg.txt");
+        table_bg = textureAtlas.findRegion("highscore_bg");
+        table_bg.setRegionWidth((int) table.getWidth());
+        table_bg.setRegionHeight((int) table.getHeight());
+
+        table.setBackground(new TextureRegionDrawable(new TextureRegion(table_bg)));
+
+
+        //Actors werden Listener hinzugefügt
+        back_button.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                //Show Highscore Screen
-                game.setScreen(new Highscore_Screen(game));
-                System.out.println(actor.getName());
+                // zurück zum Menu_Screen
             }
         });
 
         //Wird der Stage hinzugefügt (Layout - Behälter)
-        stage.addActor(menu_screen_button);
-        stage.addActor(menu_screen_highscore_button);
+        stage.addActor(table);
+        stage.addActor(back_button);
 
 
     }
+
 
     @Override
     public void show() {
@@ -111,7 +122,6 @@ public class Menu_Screen implements Screen {
 
         stage.act(delta);
         stage.draw();
-
     }
 
     @Override
@@ -137,13 +147,5 @@ public class Menu_Screen implements Screen {
     @Override
     public void dispose() {
 
-    }
-
-    public TextButton getMenu_screen_button() {
-        return menu_screen_button;
-    }
-
-    public void setMenu_screen_button(TextButton menu_screen_button) {
-        this.menu_screen_button = menu_screen_button;
     }
 }

@@ -1,0 +1,12 @@
+highscore_bg.png
+size: 1922, 1082
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+highscore_bg
+  rotate: false
+  xy: 1, 1
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
