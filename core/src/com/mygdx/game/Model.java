@@ -85,13 +85,14 @@ public class Model {
      * @param npc
      * @param rec
      */
-    public void npc_route_running(MoveToAction ac , Actor npc, Array<Rectangle> rec) {
+    public void npc_route_running(MoveToAction ac , Enemy npc, Array<Rectangle> rec) {
         for(int i = 1; i < rec.size; i++){
-            if ((int) npc.getX() == (int) rec.get(i).x && (int) npc.getY() == (int) rec.get(i).y) {
+            if ((int) npc.getX() == (int) rec.get(i).getX() && (int) npc.getY() == (int) rec.get(i).getY()) {
                 npc.removeAction(ac);
                 ac = new MoveToAction();
                 ac.setDuration(3);
                 if(i<rec.size-1){
+                    npc.dir = checkDirection(rec.get(i), rec.get(i+1));
                     ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
                 }
                 else {
@@ -101,6 +102,19 @@ public class Model {
                 //npc.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
             }
         }
+    }
+
+    public static Enemy.Dir checkDirection(Rectangle current, Rectangle next){
+        if(current.getX() > next.getX()) {
+            return Enemy.Dir.LEFT;
+        } else if (current.getX() < next.getX()) {
+            return Enemy.Dir.RIGHT;
+        } else if (current.getY() > next.getY()) {
+            return Enemy.Dir.DOWN;
+        } else if (current.getY() < next.getY()){
+            return Enemy.Dir.UP;
+        }
+        return null;
     }
 
     /**
