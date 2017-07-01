@@ -63,12 +63,17 @@ public class Model {
      * @param rec
      */
     public void npc_route_running(MoveToAction ac , Label label, Array<Rectangle> rec) {
-        for(int i = 1; i <= 12; i++){
+        for(int i = 1; i < rec.size; i++){
             if ((int) label.getX() == (int) rec.get(i).x && (int) label.getY() == (int) rec.get(i).y) {
                 label.removeAction(ac);
                 ac = new MoveToAction();
                 ac.setDuration(3);
-                ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
+                if(i<rec.size-1){
+                    ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
+                }
+                else {
+                    ac.setPosition(rec.get(i).x, rec.get(i).y);
+                }
                 label.addAction(ac);
                 //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
             }

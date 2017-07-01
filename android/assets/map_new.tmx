@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
-<map version="1.0" tiledversion="1.0.1" orientation="orthogonal" renderorder="right-down" width="44" height="34" tilewidth="32" tileheight="32" nextobjectid="140">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="44" height="34" tilewidth="32" tileheight="32" nextobjectid="140">
  <tileset firstgid="1" source="LPC_Terrain/Terrain.tsx"/>
  <layer name="black_bg" width="44" height="34">
   <data encoding="csv">
@@ -144,9 +143,9 @@
   <object id="111" x="224" y="544" width="160" height="128"/>
  </objectgroup>
  <objectgroup name="position">
-  <object id="126" x="448" y="0" width="32" height="32"/>
+  <object id="126" x="446" y="-38" width="32" height="32"/>
   <object id="127" x="448" y="64" width="32" height="32"/>
-  <object id="128" x="128" y="96" width="32" height="32"/>
+  <object id="128" x="122" y="72" width="32" height="32"/>
   <object id="129" x="128" y="448" width="32" height="32"/>
   <object id="130" x="448" y="448" width="32" height="32"/>
   <object id="131" x="448" y="352" width="32" height="32"/>
@@ -157,6 +156,6 @@
   <object id="136" x="1248" y="960" width="32" height="32"/>
   <object id="137" x="1248" y="96" width="32" height="32"/>
   <object id="138" x="768" y="64" width="32" height="32"/>
-  <object id="139" x="768" y="0" width="32" height="32"/>
+  <object id="139" x="768" y="-38" width="32" height="32"/>
  </objectgroup>
 </map>
