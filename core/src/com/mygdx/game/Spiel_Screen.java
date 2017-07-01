@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -39,7 +40,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Created by Laurenz on 15.11.2015.
  */
 
-public class Spiel_Screen extends ApplicationAdapter implements Screen {
+public class Spiel_Screen extends Stage implements Screen {
     //MVC
     private Model model;
     private Controller controller;
@@ -70,7 +71,7 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
     private Vector2 vec;
     private Vector3 touchPoint;
     //Collision Detection und Movement Controll
-    private Array<Rectangle> rects, starts;
+    private Array<Rectangle> tiled_tower_fields, tiled_npc_fields;
     private TextureAtlas menu,menuicons;
     private TextureRegion tablem;
     private Skin uiskin;
@@ -92,11 +93,11 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
     //MVC Objects
         this.game = g;
         model = new Model(this);
-        controller= new Controller(this,model,game);
+       //ntroller= new Controller(this,model,game);
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin.getFont("default-font").getData().setScale(3, 3);
      //Tiled Map wird geladen und dessen Informartion geholten
-        tiledMap = new TmxMapLoader().load("ele.tmx");
+        tiledMap = new TmxMapLoader().load("map_new.tmx");
         MapProperties prop = tiledMap.getProperties();
     //Dimension(Anzahl) der Tiles
         int mapWidth = prop.get("width", Integer.class);
@@ -111,21 +112,18 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
      // Tiledmap wird gerendert (Sonst kann nicht angezeigt werden)
         renderer = new OrthogonalTiledMapRenderer(tiledMap);
     //Camera
-
-
-        //Camera
-        stage = new Stage(new StretchViewport(mapPixelWidth+360, mapPixelHeight)); //+360 Wegen Tabellengröße Width
+        stage = new Stage(new StretchViewport(mapPixelWidth+360, mapPixelHeight)); //+360 Wegen Tabellengröße Width7
+        Gdx.input.setInputProcessor(stage);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, stage.getWidth(), stage.getHeight());
         camera.update();
+    //Gui Elements
 
-        starts = new Array<Rectangle>();
-        starts = model.getTiledObjects(tiledMap,starts,"position");
+        tiled_npc_fields = new Array<Rectangle>();
+        tiled_npc_fields = model.getTiledObjects(tiledMap, tiled_npc_fields,"position");
 
-        rects = new Array<Rectangle>();
-        rects = model.getTiledObjects(tiledMap,rects,"valid");
-
-
+        tiled_tower_fields = new Array<Rectangle>();
+        tiled_tower_fields = model.getTiledObjects(tiledMap, tiled_npc_fields,"towers");
 
         touchPoint = new Vector3();
 
@@ -133,16 +131,14 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
      //sourceImage.setPosition(-20,-20);
 
-        label = new Label("Hey", skin);
+        label = new Label("NPC", skin);
         gold= new Label("Gold  :", skin);
         life= new Label("Life  :", skin);
-
       //NPC startPosition
-        //NPC startPosition
-        label.setPosition(starts.get(0).x, starts.get(0).y);
+        label.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
         ac = new MoveToAction();
-        ac.setPosition(starts.get(1).x, starts.get(1).y);
+        ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
         ac.setDuration(3);
         label.addAction(ac);
 
@@ -154,6 +150,7 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
         table2.add(life).pad(15);
         table2.row();
 
+        sr = new ShapeRenderer();
 
         menu = new TextureAtlas("menu.pack");
         //Tower_Menü Hintergrundbild
@@ -204,6 +201,7 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
                 testbutton.get(i).addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                         System.out.println("sadas");
                          model.setMode(1);
                          model.setTowerNumberClicked= actor.getName();
                          model.changeTowerNumbertoName(model.setTowerNumberClicked);
@@ -294,15 +292,23 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
 
 
         spriteBatch.begin();
-        model.npc_route_running(ac , label,starts);
-        //npc_route_running(label, starts);
+        model.npc_route_running(ac , label, tiled_npc_fields);
+        //npc_route_running(label, tiled_npc_fields);
         spriteBatch.draw(currentFrame, 0 , 0);
 
+        spriteBatch.end();
+
+
+        spriteBatch.begin();
+        if(model.getMode() == model.DRAW_OPEN_FIELDS){
+            model.drawEmptyFields(this,sr,spriteBatch, tiled_tower_fields);
+        }
         spriteBatch.end();
 
         /**
          * Back to the first Screen
          */
+        Gdx.input.setCatchBackKey(true);
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
             game.setScreen(new Menu_Screen(game));
         }
@@ -310,17 +316,17 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
     }
 
     //Getter und Setter Methoden
-    public Array<Rectangle> getStarts() {
-        return starts;
+    public Array<Rectangle> getTiled_npc_fields() {
+        return tiled_npc_fields;
     }
-    public void setStarts(Array<Rectangle> starts) {
-        this.starts = starts;
+    public void setTiled_npc_fields(Array<Rectangle> tiled_npc_fields) {
+        this.tiled_npc_fields = tiled_npc_fields;
     }
-    public Array<Rectangle> getRects() {
-        return rects;
+    public Array<Rectangle> getTiled_tower_fields() {
+        return tiled_tower_fields;
     }
-    public void setRects(Array<Rectangle> rects) {
-        this.rects = rects;
+    public void setTiled_tower_fields(Array<Rectangle> tiled_tower_fields) {
+        this.tiled_tower_fields = tiled_tower_fields;
     }
     public MoveToAction getAc() {
         return ac;
@@ -379,5 +385,13 @@ public class Spiel_Screen extends ApplicationAdapter implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return spriteBatch;
+    }
+
+    public Skin getUiskin() {
+        return uiskin;
     }
 }

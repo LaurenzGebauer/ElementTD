@@ -52,7 +52,7 @@ public class Controller extends DragListener implements ChangeListener {
      * @param
      */
     public void dragStop(InputEvent event, float x, float y, int pointer) {
-//        if (model.pointInRectangles(spielScreen.getRects(), spielScreen.getTouchPoint().x, spielScreen.getTouchPoint().y)) {
+//        if (model.pointInRectangles(spielScreen.getTiled_tower_fields(), spielScreen.getTouchPoint().x, spielScreen.getTouchPoint().y)) {
 //            spielScreen.getSourceImage().remove();
 //        }
 //        else spielScreen.getSourceImage().clearListeners();

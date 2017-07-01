@@ -28,8 +28,10 @@ public class Model {
 
     public static final int UNDEFINED = 0;
     public static final int DRAW_OPEN_FIELDS = 1;
+
     public String setTowerNumberClicked = null;
     public String towerNameClicked ="";
+
     private Sprite sprite;
     private Texture texture;
 
@@ -56,106 +58,38 @@ public class Model {
     }
     /**
      *
-     * NPC's Laufen Route ab
+     * Label läuft Route ab
      * @param label
      * @param rec
      */
     public void npc_route_running(MoveToAction ac , Label label, Array<Rectangle> rec) {
-        if ((int) label.getX() == (int) rec.get(1).x && (int) label.getY() == (int) rec.get(1).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(2).x, rec.get(2).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+        for(int i = 1; i <= 12; i++){
+            if ((int) label.getX() == (int) rec.get(i).x && (int) label.getY() == (int) rec.get(i).y) {
+                label.removeAction(ac);
+                ac = new MoveToAction();
+                ac.setDuration(3);
+                ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
+                label.addAction(ac);
+                //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+            }
         }
-        if ((int) label.getX() == (int) rec.get(2).x && (int) label.getY() == (int) rec.get(2).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(3).x, rec.get(3).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(3).x && (int) label.getY() == (int) rec.get(3).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(4).x, rec.get(4).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(4).x && (int) label.getY() == (int) rec.get(4).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(5).x, rec.get(5).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(4).x && (int) label.getY() == (int) rec.get(4).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(5).x, rec.get(5).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(5).x && (int) label.getY() == (int) rec.get(5).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(6).x, rec.get(6).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(6).x && (int) label.getY() == (int) rec.get(6).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(7).x, rec.get(7).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(7).x && (int) label.getY() == (int) rec.get(7).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(8).x, rec.get(8).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(8).x && (int) label.getY() == (int) rec.get(8).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(9).x, rec.get(9).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(9).x && (int) label.getY() == (int) rec.get(9).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(10).x, rec.get(10).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(10).x && (int) label.getY() == (int) rec.get(10).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(11).x, rec.get(11).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-        }
-        if ((int) label.getX() == (int) rec.get(11).x && (int) label.getY() == (int) rec.get(11).y) {
-            label.removeAction(ac);
-            ac = new MoveToAction();
-            ac.setDuration(3);
-            ac.setPosition(rec.get(12).x, rec.get(12).y);
-            label.addAction(ac);
-            //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+    }
+    /**
+     *
+     * NPC's laufen Route ab
+     * @param npc
+     * @param rec
+     */
+    public void npc_route_running(MoveToAction ac , Actor npc, Array<Rectangle> rec) {
+        for(int i = 1; i <= 12; i++){
+            if ((int) npc.getX() == (int) rec.get(i).x && (int) npc.getY() == (int) rec.get(i).y) {
+                npc.removeAction(ac);
+                ac = new MoveToAction();
+                ac.setDuration(3);
+                ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
+                npc.addAction(ac);
+                //npc.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+            }
         }
     }
 
@@ -172,7 +106,7 @@ public class Model {
             sr.setProjectionMatrix(spriteBatch.getProjectionMatrix());
             sr.begin(ShapeRenderer.ShapeType.Filled);
             sr.setColor(Color.GREEN);
-            sr.rect(r.get(i).x-110,r.get(i).y, r.get(i).width,r.get(i).height);
+            sr.rect(r.get(i).x,r.get(i).y, r.get(i).width,r.get(i).height);
             sr.end();
 
         }
@@ -189,8 +123,7 @@ public class Model {
      * @param i
      */
     public void drawTower(Spiel_Screen spiel_screen, Array<Rectangle> r , int i){
-
-                spiel_screen.getSpriteBatch().draw(spiel_screen.getUiskin().getRegion(towerNameClicked),r.get(i).x-110 ,r.get(i).y);
+             spiel_screen.getSpriteBatch().draw(spiel_screen.getUiskin().getRegion(towerNameClicked),r.get(i).x-110 ,r.get(i).y);
     }
 
     /**
@@ -243,6 +176,9 @@ public class Model {
     }
 
 
-    public void setMode(int _mode) { mMode = _mode; }
+    public void setMode(int _mode) {
+        mMode = _mode;
+        System.out.println("dasd");
+    }
 
 }
