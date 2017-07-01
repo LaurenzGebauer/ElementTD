@@ -44,6 +44,7 @@ public class Spiel_Screen extends Stage implements Screen {
     //MVC
     private Model model;
     private Controller controller;
+    private ArrowTower arrowTower;
     //Screen Elemente
     private KeyBack_Menu_Screen game;
     private Stage stage;
@@ -93,7 +94,7 @@ public class Spiel_Screen extends Stage implements Screen {
     //MVC Objects
         this.game = g;
         model = new Model(this);
-       //ntroller= new Controller(this,model,game);
+        arrowTower = new ArrowTower();
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin.getFont("default-font").getData().setScale(3, 3);
      //Tiled Map wird geladen und dessen Informartion geholten
@@ -108,7 +109,6 @@ public class Spiel_Screen extends Stage implements Screen {
     //Auflösung wird Berrechnet Tiles * Anzahl der Tiles z.B 1980/1080
          mapPixelWidth = mapWidth * tilePixelWidth;
          mapPixelHeight = mapHeight * tilePixelHeight;
-
      // Tiledmap wird gerendert (Sonst kann nicht angezeigt werden)
         renderer = new OrthogonalTiledMapRenderer(tiledMap);
     //Camera
@@ -123,7 +123,7 @@ public class Spiel_Screen extends Stage implements Screen {
         tiled_npc_fields = model.getTiledObjects(tiledMap, tiled_npc_fields,"position");
 
         tiled_tower_fields = new Array<Rectangle>();
-        tiled_tower_fields = model.getTiledObjects(tiledMap, tiled_npc_fields,"towers");
+        tiled_tower_fields = model.getTiledObjects(tiledMap, tiled_tower_fields,"towers");
 
         touchPoint = new Vector3();
 
@@ -245,6 +245,7 @@ public class Spiel_Screen extends Stage implements Screen {
         spriteBatch = new SpriteBatch();                // #12
         stateTime = 0f;                         // #13
     //Listeners und Stage platzierungen
+        stage.addActor(arrowTower);
         stage.addActor(label);
         stage.addActor(table);
      }
@@ -292,7 +293,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
 
         spriteBatch.begin();
-        model.npc_route_running(ac , label, tiled_npc_fields);
+        model.npc_route_running(ac ,label, tiled_npc_fields);
         //npc_route_running(label, tiled_npc_fields);
         spriteBatch.draw(currentFrame, 0 , 0);
 
@@ -300,6 +301,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
 
         spriteBatch.begin();
+        arrowTower.draw(spriteBatch,Gdx.input.getX(), Gdx.input.getY());
         if(model.getMode() == model.DRAW_OPEN_FIELDS){
             model.drawEmptyFields(this,sr,spriteBatch, tiled_tower_fields);
         }
