@@ -12,6 +12,14 @@ public class Enemy extends Actor {
     protected Animation animatedNpc;
     private int health;
     private int goldReward;
+    protected Dir dir;
+
+    public Enemy(Animation animation, int health, int goldReward) {
+        this.animatedNpc = animation;
+        this.health = health;
+        this.goldReward = goldReward;
+        this.dir = Dir.DOWN;
+    }
 
     protected enum Dir {
         LEFT, RIGHT, UP, DOWN
@@ -30,5 +38,15 @@ public class Enemy extends Actor {
         this.goldReward = goldReward;
     }
 
+    public static Enemy createEnemy(Animation animation, Dir dir) {
+
+        // GameState state = GameState.getInstance();
+
+        int health = 3;
+        int goldReward = 5;
+
+        Enemy enemy = new Enemy(animation, health, goldReward);
+        return enemy;
+    }
 
 }
