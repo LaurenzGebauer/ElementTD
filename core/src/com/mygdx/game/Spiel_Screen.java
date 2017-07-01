@@ -61,8 +61,10 @@ public class Spiel_Screen extends Stage implements Screen {
     private Texture walkSheet;
     private TextureRegion[] walkFrames;
     private SpriteBatch spriteBatch;
+    private SpriteBatch npcSpriteBatch;
     private TextureRegion currentFrame;
     private float stateTime;
+    private Enemy enemy;
     //Shaperenderer
     private ShapeRenderer sr;
     //Gui- Elemente
@@ -131,16 +133,10 @@ public class Spiel_Screen extends Stage implements Screen {
 
      //sourceImage.setPosition(-20,-20);
 
-        label = new Label("NPC", skin);
+        //label = new Label("NPC", skin);
         gold= new Label("Gold  :", skin);
         life= new Label("Life  :", skin);
-      //NPC startPosition
-        label.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
-        //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
-        ac = new MoveToAction();
-        ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
-        ac.setDuration(3);
-        label.addAction(ac);
+
 
     //Tower_Menü
         table = new Table();
@@ -232,6 +228,8 @@ public class Spiel_Screen extends Stage implements Screen {
 
 
     //Animation
+        spriteBatch = new SpriteBatch();
+        npcSpriteBatch = new SpriteBatch();
         walkSheet = new Texture(Gdx.files.internal("runningcat.png")); // #9
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS);              // #10
         walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
@@ -242,11 +240,23 @@ public class Spiel_Screen extends Stage implements Screen {
             }
         }
         walkAnimation = new Animation(0.2f, walkFrames);      // #11
-        spriteBatch = new SpriteBatch();                // #12
         stateTime = 0f;                         // #13
+        enemy = Enemy.createEnemy(walkAnimation);
+
+        //NPC startPosition
+        //label.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
+        enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
+        //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
+        ac = new MoveToAction();
+        ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
+        ac.setDuration(3);
+        //label.addAction(ac);
+        enemy.addAction(ac);
+
     //Listeners und Stage platzierungen
         stage.addActor(arrowTower);
-        stage.addActor(label);
+        //stage.addActor(label);
+        stage.addActor(enemy);
         stage.addActor(table);
      }
 
@@ -280,7 +290,9 @@ public class Spiel_Screen extends Stage implements Screen {
 
         //Animation Bewegung
         stateTime += Gdx.graphics.getDeltaTime();           // #15
-        currentFrame = (TextureRegion) walkAnimation.getKeyFrame(stateTime, true);  // #16
+        //currentFrame = (TextureRegion) walkAnimation.getKeyFrame(stateTime, true);  // #16
+
+        currentFrame = (TextureRegion) enemy.animatedNpc.getKeyFrame(stateTime, true);
 
         //System.out.println("X   "+sourceImage.getX()+"Y"+ sourceImage.getY());
         renderer.render();
@@ -291,14 +303,21 @@ public class Spiel_Screen extends Stage implements Screen {
 
         vec = getStageLocation(testbutton.get(2));
 
+        float scaleFactor = 0.5f;
 
+        npcSpriteBatch.begin();
+        model.npc_route_running(ac, enemy, tiled_npc_fields);
+        npcSpriteBatch.draw(currentFrame, enemy.getX(), enemy.getY(), currentFrame.getRegionWidth() * scaleFactor, currentFrame.getRegionHeight() * scaleFactor);
+        npcSpriteBatch.end();
+
+        /*
         spriteBatch.begin();
-        model.npc_route_running(ac ,label, tiled_npc_fields);
+        model.npc_route_running(ac, label, tiled_npc_fields);
         //npc_route_running(label, tiled_npc_fields);
         spriteBatch.draw(currentFrame, 0 , 0);
 
         spriteBatch.end();
-
+        */
 
         spriteBatch.begin();
         arrowTower.draw(spriteBatch,Gdx.input.getX(), Gdx.input.getY());

@@ -14,6 +14,8 @@ public class Enemy extends Actor {
     private int goldReward;
     protected Dir dir;
 
+
+
     public Enemy(Animation animation, int health, int goldReward) {
         this.animatedNpc = animation;
         this.health = health;
@@ -38,7 +40,7 @@ public class Enemy extends Actor {
         this.goldReward = goldReward;
     }
 
-    public static Enemy createEnemy(Animation animation, Dir dir) {
+    public static Enemy createEnemy(Animation animation) {
 
         // GameState state = GameState.getInstance();
 
