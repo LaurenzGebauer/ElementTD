@@ -34,6 +34,7 @@ public class Model {
     Sprite sprittower;
 
 
+
     public int getTowerplacementobserver() {
         return towerplacementobserver;
     }
@@ -51,7 +52,7 @@ public class Model {
 
     private Sprite sprite;
     private Texture texture;
-
+    public int towercost;
 
     public Model(Spiel_Screen start) {
         this.start= start;
@@ -174,6 +175,8 @@ public class Model {
 
     }
 
+
+
     /**
      * Zeichnet den Tower an der Stelle
      * @param
@@ -184,6 +187,11 @@ public class Model {
             start.getSpriteBatch().draw(textureRegionconverter(),r.get(i).x ,r.get(i).y);
     }
 
+    public Rectangle towerRange(float x, float y){
+        Rectangle arrowRange = new Rectangle();
+        arrowRange.set(x-200,y-200,400,400);
+        return arrowRange;
+    }
 
     public TextureRegion textureRegionconverter(){
 
@@ -199,36 +207,43 @@ public class Model {
 
         if(num==0){
             towerNameClicked="arrow";
+            towercost=10;
             return "arrow";
         }
         else
         if(num==1){
             towerNameClicked= "cannon";
+            towercost=15;
         }
         else
         if(num==2){
             towerNameClicked="fire";
+            towercost=50;
         }
         else
         if(num==3){
             towerNameClicked= "water";
+            towercost=50;
         }
         else
         if(num==4){
-
             towerNameClicked= "darkness";
+            towercost=50;
         }
         else
         if(num==5){
             towerNameClicked= "light";
+            towercost=50;
         }
         else
         if(num==6){
             towerNameClicked= "nature";
+            towercost=50;
         }
         else
         if(num==7){
             towerNameClicked= "earth";
+            towercost=50;
         }
          return towerNameClicked;
         }

@@ -4,6 +4,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -75,13 +76,15 @@ public class Spiel_Screen extends Stage implements Screen {
     //Shaperenderer
     private ShapeRenderer sr;
     //Gui- Elemente
-    private Label label, gold, life;
+    private Label label, gold, life,goldstand,lifestand;
+    private int goldzahl;
+    private int lifezahl;
     private Image sourceImage;
     //Actual User Touchpoints
     private Vector2 vec;
     private Vector3 touchPoint;
     //Collision Detection und Movement Controll
-    private Array<Rectangle> tiled_tower_fields, tiled_npc_fields;
+    private Array<Rectangle> tiled_tower_fields, tiled_npc_fields,towerrange;
     private TextureAtlas menu, towermenuicons;
 
     // Towers
@@ -104,6 +107,7 @@ public class Spiel_Screen extends Stage implements Screen {
     final Table table2 = new Table();
     private Viewport viewport;
     private int mapPixelHeight, mapPixelWidth;
+
 
     public Array<ImageButton> getTestbutton() {
         return testbutton;
@@ -148,6 +152,8 @@ public class Spiel_Screen extends Stage implements Screen {
         tiled_tower_fields = new Array<Rectangle>();
         tiled_tower_fields = model.getTiledObjects(tiledMap, tiled_tower_fields, "towers");
 
+        towerrange = new Array<Rectangle>();
+
         touchPoint = new Vector3();
 
         skin.add("hero", new Texture("Hero.png"));
@@ -157,7 +163,10 @@ public class Spiel_Screen extends Stage implements Screen {
         //label = new Label("NPC", skin);
         gold = new Label("Gold  :", skin);
         life = new Label("Life  :", skin);
-
+        goldzahl=100;
+        lifezahl=5;
+        goldstand = new Label(""+goldzahl, skin);
+        lifestand = new Label(""+lifezahl, skin);
 
     //Tower_Menü
         table = new Table();
@@ -165,6 +174,9 @@ public class Spiel_Screen extends Stage implements Screen {
         table.setFillParent(true);
         table2.add(gold).pad(15);
         table2.add(life).pad(15);
+        table2.row();
+        table2.add(goldstand).pad(15);
+        table2.add(lifestand).pad(15);
         table2.row();
 
         sr = new ShapeRenderer();
@@ -210,7 +222,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
         testbutton = new Array<ImageButton>();
 
-        Rectangle rec = new Rectangle();
+
 
          //Tower_Buttons werden der Tabelle hinzugfügt
           for(int i = 0; i< towermenuicons.getRegions().size; i++){
@@ -379,7 +391,11 @@ public class Spiel_Screen extends Stage implements Screen {
                 if (tiled_tower_fields.get(i).contains(mousePos.x, mousePos.y)) {
 
                     model.setMode(0);
+                    if(model.towercost<=goldzahl){
                     arrowTowers.add(new ArrowTower(model.getTowerSprite(model.towerNameClicked), tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY()));
+
+                    towerrange.add(model.towerRange(tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY()));
+
                     tiled_tower_fields.removeIndex(i);
 
                     // model.drawSprite(model.towerNameClicked,tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY());
@@ -387,6 +403,9 @@ public class Spiel_Screen extends Stage implements Screen {
 
                    // model.drawTower(tiled_tower_fields, i);
                     model.setTowerplacementobserver(0);
+                    goldzahl=goldzahl-model.towercost;
+                    goldstand.setText(""+goldzahl);
+                }
                 }
             }
          }
@@ -396,6 +415,19 @@ public class Spiel_Screen extends Stage implements Screen {
         }
 
         spriteBatch.end();
+
+        for(int i = 0; i < towerrange.size; i++){
+            sr.begin(ShapeRenderer.ShapeType.Filled);
+            sr.setColor(Color.GREEN);
+            sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
+
+            sr.end();
+            if(towerrange.get(i).contains(enemy.getX(),enemy.getY())){
+                System.out.println("LaurenzBOSSlifE");
+
+            }
+        }
+
 
         /**
          * Back to the first Screen
