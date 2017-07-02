@@ -70,13 +70,7 @@ public class Enemy extends Actor {
         this.chooseAnimationByDir();
     }
 
-    public static Enemy createEnemy(Array<Animation> animations) {
-
-        // GameState state = GameState.getInstance();
-
-        int health = 3;
-        int goldReward = 5;
-
+    public static Enemy createEnemy(Array<Animation> animations, int health, int goldReward) {
         Enemy enemy = new Enemy(animations, health, goldReward);
         return enemy;
     }

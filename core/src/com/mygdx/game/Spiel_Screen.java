@@ -4,7 +4,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,8 +31,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.Iterator;
 
 
 /**
@@ -65,13 +67,15 @@ public class Spiel_Screen extends Stage implements Screen {
     //Animation
     private Animation walkAnimation;
     private Array<Animation> walkAnimations;
+    private Animation deadAnimation;
     private Texture walkSheet;
     private TextureRegion[] walkFrames;
     private SpriteBatch spriteBatch;
     private SpriteBatch npcSpriteBatch;
     private TextureRegion currentFrame;
     private float stateTime;
-    private Enemy enemy;
+    private Array<Enemy> enemys = new Array<Enemy>();
+    private Iterator<Enemy> enemyIterator;
     private int angle;
     //Shaperenderer
     private ShapeRenderer sr;
@@ -86,6 +90,16 @@ public class Spiel_Screen extends Stage implements Screen {
     //Collision Detection und Movement Controll
     private Array<Rectangle> tiled_tower_fields, tiled_npc_fields,towerrange;
     private TextureAtlas menu, towermenuicons;
+
+    // Rounds
+    private int round = 1;
+    private int health = 1;
+    private int goldReward = 1;
+    private int enemyCounter = 0;
+
+    // Time
+    double lastSpawn = TimeUtils.nanoTime();
+    double spawnFreq = TimeUtils.millisToNanos(3000);
 
     // Towers
     Array<ArrowTower> arrowTowers = new Array<ArrowTower>();
@@ -287,28 +301,80 @@ public class Spiel_Screen extends Stage implements Screen {
             walkFrames = new TextureRegion[9 * 1];
         }
 
+        walkFrames = new TextureRegion[6 * 1];
+        for (int i = 0; i < 6; i++) {
+            walkFrames[i] = tmp[FRAME_ROWS-1][i];
+        }
+        deadAnimation = new Animation(0.2f, walkFrames);
 
         //walkAnimation = new Animation(0.2f, walkFrames);      // #11
         stateTime = 0f;                         // #13
-        enemy = Enemy.createEnemy(walkAnimations);
+
+
 
         //NPC startPosition
         //label.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
-        enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
+        //enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
         ac = new MoveToAction();
         ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
         ac.setDuration(3);
         //label.addAction(ac);
-        enemy.addAction(ac);
+        //enemy.addAction(ac);
 
         //Listeners und Stage platzierungen
         //stage.addActor(arrowTower);
     //Listeners und Stage platzierungen
         //stage.addActor(arrowTower);
         //stage.addActor(label);
-        stage.addActor(enemy);
+        //stage.addActor(enemy);
+
         stage.addActor(table);
+        changeRound();
+        /*for (int i = 0; i < enemys.size; i++) {
+            stage.addActor(enemys.get(i));
+        }*/
+    }
+
+    public void changeRound() {
+        switch (round) {
+            case 1: // enemys = createEnemys(10, 5);
+                health = 10;
+                goldReward = 5;
+                break;
+            case 2: // enemys = createEnemys(15, 9);
+                health = 15;
+                goldReward = 9;
+                break;
+            case 3: // enemys = createEnemys(20, 14);
+                health = 20;
+                goldReward = 14;
+                break;
+            case 4: // enemys = createEnemys(25, 19);
+                health = 20;
+                goldReward = 19;
+                break;
+            case 5: // enemys = createEnemys(30, 24);
+                health = 30;
+                goldReward = 24;
+                break;
+            default: // enemys = createEnemys(1, 1);
+                health = 1;
+                goldReward = 1;
+                break;
+        }
+        enemyIterator = enemys.iterator();
+    }
+
+    public Array<Enemy> createEnemys(int health, int goldReward) {
+        Array<Enemy> newEnemys = new Array<Enemy>();
+        for (int i = 0; i < 10; i++) {
+            Enemy singleEnemy = Enemy.createEnemy(this.walkAnimations, health, goldReward);
+            singleEnemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
+            singleEnemy.addAction(ac);
+            newEnemys.add(singleEnemy);
+        }
+        return newEnemys;
     }
 
     public static Vector2 getStageLocation(Actor actor) {
@@ -334,7 +400,6 @@ public class Spiel_Screen extends Stage implements Screen {
         stateTime += Gdx.graphics.getDeltaTime();           // #15
         //currentFrame = (TextureRegion) walkAnimation.getKeyFrame(stateTime, true);  // #16
 
-        currentFrame = (TextureRegion) enemy.animatedNpc.getKeyFrame(stateTime, true);
 
         //System.out.println("X   "+sourceImage.getX()+"Y"+ sourceImage.getY());
         renderer.render();
@@ -346,20 +411,31 @@ public class Spiel_Screen extends Stage implements Screen {
         float scaleFactor = 2f;
 
         npcSpriteBatch.begin();
-        model.npc_route_running(ac, enemy, tiled_npc_fields);
+        if((TimeUtils.nanoTime() - lastSpawn > spawnFreq) && enemyCounter <= 10) {
+            //for (int i = 0; i < enemys.size; i++) {
+            Enemy newEnemy = new Enemy(walkAnimations, health, goldReward);
+            stage.addActor(newEnemy);
+            newEnemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
+            newEnemy.addAction(ac);
+            enemys.add(newEnemy);
+            enemyCounter++;
+            lastSpawn = TimeUtils.nanoTime();
+        }
 
-        npcSpriteBatch.draw(currentFrame,
-                enemy.getX(),
-                enemy.getY(),
-                currentFrame.getRegionWidth() * scaleFactor,
-                currentFrame.getRegionHeight() * scaleFactor);
+        if(enemys.size != 0){
+            for (int i = 0; i < enemys.size; i++) {
+                currentFrame = (TextureRegion) enemys.get(i).animatedNpc.getKeyFrame(stateTime, true);
 
-       // enemy.draw(npcSpriteBatch, delta);
+                model.npc_route_running(ac, enemys.get(i), tiled_npc_fields);
 
-
+                npcSpriteBatch.draw(currentFrame,
+                        enemys.get(i).getX(),
+                        enemys.get(i).getY(),
+                        currentFrame.getRegionWidth() * scaleFactor,
+                        currentFrame.getRegionHeight() * scaleFactor);
+            }
+        }
         npcSpriteBatch.end();
-
-      //  currentFrame.flip(false,false);
 
          /*
         spriteBatch.begin();
@@ -421,10 +497,13 @@ public class Spiel_Screen extends Stage implements Screen {
 //            sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
 //
 //            sr.end();
+
+            /*
+            TODO: Enemy enemy wurde durch Array<Enemy> enemys ersetzt
             if(towerrange.get(i).contains(enemy.getX(),enemy.getY())){
                 System.out.println("LaurenzBOSSlifE");
-
             }
+            */
         }
 
 
