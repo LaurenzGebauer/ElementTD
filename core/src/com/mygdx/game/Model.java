@@ -3,8 +3,10 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -29,8 +31,23 @@ public class Model {
     public static final int UNDEFINED = 0;
     public static final int DRAW_OPEN_FIELDS = 1;
 
+    Sprite sprittower;
+
+
+    public int getTowerplacementobserver() {
+        return towerplacementobserver;
+    }
+
+    public void setTowerplacementobserver(int towerplacementobserver) {
+        this.towerplacementobserver = towerplacementobserver;
+    }
+
+    private int towerplacementobserver = UNDEFINED;
+    public static final int towervalid = 0;
+    public static final int towerinvalid = 1;
+
     public String setTowerNumberClicked = null;
-    public String towerNameClicked ="";
+    public String towerNameClicked ="arrow";
 
     private Sprite sprite;
     private Texture texture;
@@ -38,6 +55,8 @@ public class Model {
 
     public Model(Spiel_Screen start) {
         this.start= start;
+        this.sprite = new Sprite();
+
     }
 
     /**
@@ -99,6 +118,7 @@ public class Model {
                     ac.setPosition(rec.get(i).x, rec.get(i).y);
                 }
                 npc.addAction(ac);
+
                 //npc.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
             }
         }
@@ -132,24 +152,43 @@ public class Model {
             sr.setColor(Color.GREEN);
             sr.rect(r.get(i).x,r.get(i).y, r.get(i).width,r.get(i).height);
             sr.end();
-
         }
+    }
+
+    public void drawSprite(String name, float x, float y) {
+
+        Sprite sprite = start.getTowermenuicons().createSprite(name);
+        sprite.setPosition(x, y);
+        sprite.draw(start.getSpriteBatch());
+    }
+
+    public Sprite getTowerSprite(String name) {
+        return start.getTowermenuicons().createSprite(name);
+    }
+
+    public void spirteexample(Sprite sprite) {
+
     }
 
     public void notEmptyFields(){
 
-     }
+    }
 
     /**
      * Zeichnet den Tower an der Stelle
-     * @param spiel_screen
+     * @param
      * @param r
      * @param i
      */
-    public void drawTower(Spiel_Screen spiel_screen, Array<Rectangle> r , int i){
-             spiel_screen.getSpriteBatch().draw(spiel_screen.getUiskin().getRegion(towerNameClicked),r.get(i).x-110 ,r.get(i).y);
+    public void drawTower(Array<Rectangle> r , int i){
+            start.getSpriteBatch().draw(textureRegionconverter(),r.get(i).x ,r.get(i).y);
     }
 
+
+    public TextureRegion textureRegionconverter(){
+
+        return start.getUiskin().getRegion(towerNameClicked);
+    }
     /**
      * Nimmt die Tower ID und wandelt es in den passendenden Tower Namen um
      * @param TowerNumber
@@ -192,17 +231,15 @@ public class Model {
             towerNameClicked= "earth";
         }
          return towerNameClicked;
-
-      }
+        }
 
     public int getMode() {
         return mMode;
     }
 
-
     public void setMode(int _mode) {
         mMode = _mode;
-        System.out.println("dasd");
+
     }
 
 }

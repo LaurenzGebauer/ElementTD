@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -7,7 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -45,6 +46,10 @@ public class Spiel_Screen extends Stage implements Screen {
     private Model model;
     private Controller controller;
     private ArrowTower arrowTower;
+
+    private TowerSprite towersprite;
+    private Sprite sprite;
+    private Sprite banana;
     //Screen Elemente
     private KeyBack_Menu_Screen game;
     private Stage stage;
@@ -77,7 +82,20 @@ public class Spiel_Screen extends Stage implements Screen {
     private Vector3 touchPoint;
     //Collision Detection und Movement Controll
     private Array<Rectangle> tiled_tower_fields, tiled_npc_fields;
-    private TextureAtlas menu, menuicons;
+    private TextureAtlas menu, towermenuicons;
+
+    // Towers
+    Array<ArrowTower> arrowTowers = new Array<ArrowTower>();
+
+    public TextureAtlas getTowermenuicons() {
+        return towermenuicons;
+    }
+
+    public void setTowermenuicons(TextureAtlas towermenuicons) {
+        this.towermenuicons = towermenuicons;
+    }
+
+    //private TextureAtlas towermenuicons;
     private TextureRegion tablem;
     private Skin uiskin;
     private Array<ImageButton> testbutton;
@@ -101,13 +119,14 @@ public class Spiel_Screen extends Stage implements Screen {
         arrowTower = new ArrowTower();
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin.getFont("default-font").getData().setScale(3, 3);
-        //Tiled Map wird geladen und dessen Informartion geholten
+
+     //Tiled Map wird geladen und dessen Informartion geholten
         tiledMap = new TmxMapLoader().load("map_new.tmx");
         MapProperties prop = tiledMap.getProperties();
-        //Dimension(Anzahl) der Tiles
+    //Dimension(Anzahl) der Tiles
         int mapWidth = prop.get("width", Integer.class);
         int mapHeight = prop.get("height", Integer.class);
-        //Größe eines Tiles
+     //Größe eines Tiles
         int tilePixelWidth = prop.get("tilewidth", Integer.class);
         int tilePixelHeight = prop.get("tileheight", Integer.class);
         //Auflösung wird Berrechnet Tiles * Anzahl der Tiles z.B 1980/1080
@@ -121,7 +140,7 @@ public class Spiel_Screen extends Stage implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, stage.getWidth(), stage.getHeight());
         camera.update();
-        //Gui Elements
+    //Gui Elements
 
         tiled_npc_fields = new Array<Rectangle>();
         tiled_npc_fields = model.getTiledObjects(tiledMap, tiled_npc_fields, "position");
@@ -133,14 +152,14 @@ public class Spiel_Screen extends Stage implements Screen {
 
         skin.add("hero", new Texture("Hero.png"));
 
-        //sourceImage.setPosition(-20,-20);
+     //sourceImage.setPosition(-20,-20);
 
         //label = new Label("NPC", skin);
         gold = new Label("Gold  :", skin);
         life = new Label("Life  :", skin);
 
 
-        //Tower_Menü
+    //Tower_Menü
         table = new Table();
         table.defaults().height(stage.getHeight());
         table.setFillParent(true);
@@ -154,10 +173,10 @@ public class Spiel_Screen extends Stage implements Screen {
         //Tower_Menü Hintergrundbild
         tablem = menu.findRegion("menu_bg");
 
-        menuicons = new TextureAtlas("menuicons.pack");
+        towermenuicons = new TextureAtlas("menuicons.pack");
         elements = new Skin(new TextureAtlas("elements.txt"));
 
-        uiskin = new Skin(menuicons);
+        uiskin = new Skin(towermenuicons);
         testbuttonstyle = new Array<ImageButton.ImageButtonStyle>();
 
         //Tower_Menu_Buttons werden Deklariert
@@ -194,33 +213,21 @@ public class Spiel_Screen extends Stage implements Screen {
         Rectangle rec = new Rectangle();
 
          //Tower_Buttons werden der Tabelle hinzugfügt
-          for(int i=0;i<menuicons.getRegions().size;i++){
+          for(int i = 0; i< towermenuicons.getRegions().size; i++){
                 ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
                 testbutton.add(item1Button);
                 testbutton.get(i).setName(""+i);
                 testbutton.get(i).addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                         System.out.println("sadas");
+
                          model.setMode(1);
                          model.setTowerNumberClicked= actor.getName();
                          model.changeTowerNumbertoName(model.setTowerNumberClicked);
+                         model.setTowerplacementobserver(1);
                  }});
-/*
-        //Tower_Buttons werden der Tabelle hinzugfügt
-        for (int i = 0; i < 6; i++) {
-            ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
-            testbutton.add(item1Button);
-            testbutton.get(i).addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    System.out.println("sadas");
-                    model.setMode(1);
-                    model.setTowerNumberClicked = actor.getName();
-                    model.changeTowerNumbertoName(model.setTowerNumberClicked);
-                }
-            });
-*/
+
+
 
             table2.add(testbutton.get(i)).pad(30);
             if (i == 1) {
@@ -285,7 +292,9 @@ public class Spiel_Screen extends Stage implements Screen {
         enemy.addAction(ac);
 
         //Listeners und Stage platzierungen
-        stage.addActor(arrowTower);
+        //stage.addActor(arrowTower);
+    //Listeners und Stage platzierungen
+        //stage.addActor(arrowTower);
         //stage.addActor(label);
         stage.addActor(enemy);
         stage.addActor(table);
@@ -296,25 +305,16 @@ public class Spiel_Screen extends Stage implements Screen {
     }
 
 
-    private NinePatch getNinePatch(String fname) {
-
-        // Get the image
-        final Texture t = new Texture(Gdx.files.internal(fname));
-
-        // create a new texture region, otherwise black pixels will show up too, we are simply cropping the image
-        // last 4 numbers respresent the length of how much each corner can draw,
-        // for example if your image is 50px and you set the numbers 50, your whole image will be drawn in each corner
-        // so what number should be good?, well a little less than half would be nice
-        return new NinePatch(new TextureRegion(t, 1, 1, t.getWidth() - 2, t.getHeight() - 2), 10, 10, 10, 10);
-    }
 
     @Override
     public void render(float delta) {
         //Prepare Screen
         Gdx.gl.glClearColor(0.55f, 0.55f, 0.55f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        Vector3 mousePos = new Vector3(  Gdx.input.getX(), Gdx.input.getY(), 0);
+        camera.unproject(mousePos);
         camera.update();
+
         //sr.setProjectionMatrix(camera.combined);
 
         renderer.setView(camera);
@@ -350,11 +350,9 @@ public class Spiel_Screen extends Stage implements Screen {
 
       //  currentFrame.flip(false,false);
 
-
-
-        /*
+         /*
         spriteBatch.begin();
-        model.npc_route_running(ac, label, tiled_npc_fields);
+        model.npc_route_running(ac ,label, tiled_npc_fields);
         //npc_route_running(label, tiled_npc_fields);
         spriteBatch.draw(currentFrame, 0 , 0);
 
@@ -362,10 +360,41 @@ public class Spiel_Screen extends Stage implements Screen {
         */
 
         spriteBatch.begin();
-        arrowTower.draw(spriteBatch, Gdx.input.getX(), Gdx.input.getY());
-        if (model.getMode() == model.DRAW_OPEN_FIELDS) {
-            model.drawEmptyFields(this, sr, spriteBatch, tiled_tower_fields);
+
+
+
+//        towersprite = new TowerSprite(sprite, (int) mousePos.x,(int) mousePos.y);
+//        towersprite.getSprite().setTexture(texturearrow);
+//        towersprite.getSprite().draw(spriteBatch);
+
+         if(model.getMode() == model.DRAW_OPEN_FIELDS){
+            model.drawEmptyFields(this,sr,spriteBatch, tiled_tower_fields);
+
         }
+        spriteBatch.end();
+
+        spriteBatch.begin();
+        if(model.getTowerplacementobserver()== model.towerinvalid) {
+            for (int i = 0; i < tiled_tower_fields.size; i++) {
+                if (tiled_tower_fields.get(i).contains(mousePos.x, mousePos.y)) {
+
+                    model.setMode(0);
+                    arrowTowers.add(new ArrowTower(model.getTowerSprite(model.towerNameClicked), tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY()));
+                    tiled_tower_fields.removeIndex(i);
+
+                    // model.drawSprite(model.towerNameClicked,tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY());
+                      //arrowTower.draw(spriteBatch,mousePos.x, mousePos.y);
+
+                   // model.drawTower(tiled_tower_fields, i);
+                    model.setTowerplacementobserver(0);
+                }
+            }
+         }
+
+        for (int i = 0; i < arrowTowers.size; i++) {
+            arrowTowers.get(i).getSprite().draw(spriteBatch);
+        }
+
         spriteBatch.end();
 
         /**
@@ -382,59 +411,45 @@ public class Spiel_Screen extends Stage implements Screen {
     public Array<Rectangle> getTiled_npc_fields() {
         return tiled_npc_fields;
     }
-
     public void setTiled_npc_fields(Array<Rectangle> tiled_npc_fields) {
         this.tiled_npc_fields = tiled_npc_fields;
     }
-
     public Array<Rectangle> getTiled_tower_fields() {
         return tiled_tower_fields;
     }
-
     public void setTiled_tower_fields(Array<Rectangle> tiled_tower_fields) {
         this.tiled_tower_fields = tiled_tower_fields;
     }
-
     public MoveToAction getAc() {
         return ac;
     }
-
     public void setAc(MoveToAction ac) {
         this.ac = ac;
     }
-
     public OrthographicCamera getCamera() {
         return camera;
     }
-
     public void setCamera(OrthographicCamera camera) {
         this.camera = camera;
     }
-
     public Image getSourceImage() {
         return sourceImage;
     }
-
     public void setSourceImage(Image sourceImage) {
         this.sourceImage = sourceImage;
     }
-
     public Vector3 getTouchPoint() {
         return touchPoint;
     }
-
     public void setTouchPoint(Vector3 touchPoint) {
         this.touchPoint = touchPoint;
     }
-
     public void setTestbutton(Array<ImageButton> testbutton) {
         this.testbutton = testbutton;
     }
-
     public Array<ImageButton.ImageButtonStyle> getTestbuttonstyle() {
         return testbuttonstyle;
     }
-
     public void setTestbuttonstyle(Array<ImageButton.ImageButtonStyle> testbuttonstyle) {
         this.testbuttonstyle = testbuttonstyle;
     }
@@ -449,27 +464,22 @@ public class Spiel_Screen extends Stage implements Screen {
     public void show() {
 
     }
-
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, false);
     }
-
     @Override
     public void pause() {
 
     }
-
     @Override
     public void resume() {
 
     }
-
     @Override
     public void hide() {
 
     }
-
     @Override
     public void dispose() {
 
