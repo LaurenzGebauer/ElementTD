@@ -266,6 +266,7 @@ public class Spiel_Screen extends Stage implements Screen {
             }
             walkAnimation = new Animation(0.2f, walkFrames);
             walkAnimations.add(walkAnimation);
+            walkFrames = new TextureRegion[9 * 1];
         }
 
 
@@ -331,7 +332,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
         vec = getStageLocation(testbutton.get(2));
 
-        float scaleFactor = 1.5f;
+        float scaleFactor = 2f;
 
         npcSpriteBatch.begin();
         model.npc_route_running(ac, enemy, tiled_npc_fields);
@@ -436,6 +437,12 @@ public class Spiel_Screen extends Stage implements Screen {
 
     public void setTestbuttonstyle(Array<ImageButton.ImageButtonStyle> testbuttonstyle) {
         this.testbuttonstyle = testbuttonstyle;
+    }
+    public float getStateTime() {
+        return stateTime;
+    }
+    public void setStateTime(float stateTime) {
+        this.stateTime = stateTime;
     }
 
     @Override
