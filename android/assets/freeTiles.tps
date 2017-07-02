@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.4.0</string>
         <key>fileName</key>
-        <string>C:/Users/Bernhard/StudioProjects/ElementTD/android/assets/elements.tps</string>
+        <string>C:/Users/Bernhard/StudioProjects/ElementTD/android/assets/freeTiles.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -150,7 +150,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>elements.txt</filename>
+                <filename>freeTiles.txt</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -199,42 +199,23 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">elements/arrow.psd</key>
-            <key type="filename">elements/cannon.psd</key>
-            <key type="filename">elements/darkness.psd</key>
-            <key type="filename">elements/earth.psd</key>
-            <key type="filename">elements/light.psd</key>
-            <key type="filename">elements/nature.psd</key>
-            <key type="filename">elements/water.psd</key>
+            <key type="filename">freeTiles.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>25,25,51,51</rect>
+                <rect>40,32,80,64</rect>
                 <key>scale9Paddings</key>
-                <rect>25,25,51,51</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">elements/fire.psd</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>25,25,51,50</rect>
-                <key>scale9Paddings</key>
-                <rect>25,25,51,50</rect>
+                <rect>40,32,80,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
         </map>
         <key>fileList</key>
         <array>
-            <filename>elements</filename>
+            <filename>freeTiles.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

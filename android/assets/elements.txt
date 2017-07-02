@@ -1,46 +1,60 @@
 elements.png
-size: 103, 617
+size: 103, 823
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-darkness
+arrow
   rotate: false
   xy: 1, 1
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
-earth
+cannon
   rotate: false
   xy: 1, 104
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
-fire
-  rotate: false
-  xy: 1, 516
-  size: 101, 100
-  orig: 101, 100
-  offset: 0, 0
-  index: -1
-light
+darkness
   rotate: false
   xy: 1, 207
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
-nature
+earth
   rotate: false
   xy: 1, 310
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
-water
+fire
+  rotate: false
+  xy: 1, 722
+  size: 101, 100
+  orig: 101, 100
+  offset: 0, 0
+  index: -1
+light
   rotate: false
   xy: 1, 413
+  size: 101, 101
+  orig: 101, 101
+  offset: 0, 0
+  index: -1
+nature
+  rotate: false
+  xy: 1, 516
+  size: 101, 101
+  orig: 101, 101
+  offset: 0, 0
+  index: -1
+water
+  rotate: false
+  xy: 1, 619
   size: 101, 101
   orig: 101, 101
   offset: 0, 0

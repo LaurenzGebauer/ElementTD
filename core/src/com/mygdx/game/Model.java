@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
@@ -141,18 +142,17 @@ public class Model {
     /**
      * Zeichnet Grüne Felder auf Felder wenn sie Frei sind
      * @param spiel_screen
-     * @param sr
+     * @param ta
      * @param spriteBatch
      * @param r
      */
-    public void drawEmptyFields(Spiel_Screen spiel_screen, ShapeRenderer sr, SpriteBatch spriteBatch, Array<Rectangle> r){
+
+    public void drawEmptyFields(Spiel_Screen spiel_screen, TextureAtlas ta, SpriteBatch spriteBatch, Array<Rectangle> r){
+        ta=new TextureAtlas("freeTiles.txt");
+       Texture freeTilesTexture = ta.findRegion("freeTiles").getTexture();
+
         for (int i = 0; i < r.size; i++) {
-            //Freie Flächen Grün
-            sr.setProjectionMatrix(spriteBatch.getProjectionMatrix());
-            sr.begin(ShapeRenderer.ShapeType.Filled);
-            sr.setColor(Color.GREEN);
-            sr.rect(r.get(i).x,r.get(i).y, r.get(i).width,r.get(i).height);
-            sr.end();
+           spriteBatch.draw(freeTilesTexture, r.get(i).x,r.get(i).y, r.get(i).width,r.get(i).height);
         }
     }
 

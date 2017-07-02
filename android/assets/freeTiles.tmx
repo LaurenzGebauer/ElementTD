@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" tiledversion="1.0.1" orientation="orthogonal" renderorder="right-down" width="5" height="4" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" source="LPC_Terrain/Terrain.tsx"/>
+ <layer name="Kachelebene 1" width="5" height="4">
+  <data encoding="csv">
+74,75,75,75,76,
+106,107,107,107,108,
+106,107,107,107,108,
+138,139,139,139,140
+</data>
+ </layer>
+</map>

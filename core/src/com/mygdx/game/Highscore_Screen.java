@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -62,19 +63,13 @@ class Highscore_Screen implements Screen {
         //Schriftgröße wird geändert
         skin.getFont("default-font").getData().setScale(3, 3);
 
-        //Button
-        back_button = new TextButton("Back", skin);
-        back_button.setSize(back_button.getWidth() + 100, back_button.getHeight() + 100);
-        back_button.setPosition(Gdx.graphics.getWidth() - 100 - back_button.getWidth() / 2, Gdx.graphics.getHeight() - 100 - back_button.getHeight() / 2); //Oben Rechts von Bildschirm
-
-
         //Hintergrundbild
         texture = new Texture(Gdx.files.internal("menu_screen.jpg"));
 
         //Tabelle
         table = new Table();
-        table.defaults().height(stage.getHeight()/2);
-        table.defaults().width(stage.getWidth()/2);
+        table.defaults().height(stage.getHeight() / 2);
+        table.defaults().width(stage.getWidth() / 2);
         table.setFillParent(true);
 
         label = new Label("Highscore:", skin);
@@ -83,23 +78,13 @@ class Highscore_Screen implements Screen {
 
         textureAtlas = new TextureAtlas("highscore_bg.txt");
         table_bg = textureAtlas.findRegion("highscore_bg");
-        table_bg.setRegionWidth((int) table.getWidth());
-        table_bg.setRegionHeight((int) table.getHeight());
+        table_bg.setRegionWidth((int) table.getWidth()/2);
+        table_bg.setRegionHeight((int) table.getHeight()/2);
 
         table.setBackground(new TextureRegionDrawable(new TextureRegion(table_bg)));
 
-
-        //Actors werden Listener hinzugefügt
-        back_button.addListener(new ChangeListener() {
-            public void changed(ChangeEvent event, Actor actor) {
-                // zurück zum Menu_Screen
-            }
-        });
-
-        //Wird der Stage hinzugefügt (Layout - Behälter)
+         //Wird der Stage hinzugefügt (Layout - Behälter)
         stage.addActor(table);
-        stage.addActor(back_button);
-
 
     }
 
@@ -122,6 +107,12 @@ class Highscore_Screen implements Screen {
 
         stage.act(delta);
         stage.draw();
+
+        //Catch Back Button
+        Gdx.input.setCatchBackKey(true);
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            game.setScreen(new Menu_Screen(game));
+        }
     }
 
     @Override

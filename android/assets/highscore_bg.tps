@@ -150,7 +150,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename></filename>
+                <filename>highscore_bg.txt</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -206,9 +206,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>480,270,960,540</rect>
+                <rect>250,125,500,250</rect>
                 <key>scale9Paddings</key>
-                <rect>480,270,960,540</rect>
+                <rect>250,125,500,250</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

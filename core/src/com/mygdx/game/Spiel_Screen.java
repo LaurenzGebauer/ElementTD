@@ -48,7 +48,7 @@ public class Spiel_Screen extends Stage implements Screen {
     private Controller controller;
     private ArrowTower arrowTower;
 
-    private TowerSprite towersprite;
+   // private TowerSprite towersprite;
     private Sprite sprite;
     private Sprite banana;
     //Screen Elemente
@@ -89,6 +89,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
     // Towers
     Array<ArrowTower> arrowTowers = new Array<ArrowTower>();
+    private TextureAtlas ta;
 
     public TextureAtlas getTowermenuicons() {
         return towermenuicons;
@@ -185,9 +186,7 @@ public class Spiel_Screen extends Stage implements Screen {
         //Tower_Menü Hintergrundbild
         tablem = menu.findRegion("menu_bg");
 
-        towermenuicons = new TextureAtlas("menuicons.pack");
-        elements = new Skin(new TextureAtlas("elements.txt"));
-
+        towermenuicons = new TextureAtlas("elements.txt");
         uiskin = new Skin(towermenuicons);
         testbuttonstyle = new Array<ImageButton.ImageButtonStyle>();
 
@@ -207,17 +206,17 @@ public class Spiel_Screen extends Stage implements Screen {
         testbuttonstyle.add(tb);
         tb2.up  = uiskin.getDrawable("cannon");
         testbuttonstyle.add(tb2);
-        tb3.up = elements.getDrawable("fire");
+        tb3.up = uiskin.getDrawable("fire");
         testbuttonstyle.add(tb3);
-        tb4.up = elements.getDrawable("water");
+        tb4.up = uiskin.getDrawable("water");
         testbuttonstyle.add(tb4);
-        tb5.up = elements.getDrawable("darkness");
+        tb5.up = uiskin.getDrawable("darkness");
         testbuttonstyle.add(tb5);
-        tb6.up = elements.getDrawable("light");
+        tb6.up = uiskin.getDrawable("light");
         testbuttonstyle.add(tb6);
-        tb7.up = elements.getDrawable("nature");
+        tb7.up = uiskin.getDrawable("nature");
         testbuttonstyle.add(tb7);
-        tb8.up = elements.getDrawable("earth");
+        tb8.up = uiskin.getDrawable("earth");
         testbuttonstyle.add(tb8);
 
         testbutton = new Array<ImageButton>();
@@ -257,7 +256,7 @@ public class Spiel_Screen extends Stage implements Screen {
         }
 
 
-        table2.setBackground(new TextureRegionDrawable(new TextureRegion(tablem)));
+                table2.setBackground(new TextureRegionDrawable(new TextureRegion(tablem)));
         table2.setHeight(stage.getHeight());
         table.add(table2);
         table.right();
@@ -380,7 +379,7 @@ public class Spiel_Screen extends Stage implements Screen {
 //        towersprite.getSprite().draw(spriteBatch);
 
          if(model.getMode() == model.DRAW_OPEN_FIELDS){
-            model.drawEmptyFields(this,sr,spriteBatch, tiled_tower_fields);
+            model.drawEmptyFields(this,ta,spriteBatch, tiled_tower_fields);
 
         }
         spriteBatch.end();

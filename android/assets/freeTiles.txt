@@ -1,0 +1,12 @@
+freeTiles.png
+size: 160, 129
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+freeTiles
+  rotate: false
+  xy: 1, 1
+  size: 158, 127
+  orig: 160, 128
+  offset: 1, 0
+  index: -1
