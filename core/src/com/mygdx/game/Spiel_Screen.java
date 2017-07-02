@@ -52,12 +52,13 @@ public class Spiel_Screen extends Stage implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     //Animation
-    private static final int FRAME_COLS = 2;
-    private static final int FRAME_ROWS = 4;
+    private static final int FRAME_COLS = 13;
+    private static final int FRAME_ROWS = 21;
     //Movement
     private MoveToAction ac;
     //Animation
     private Animation walkAnimation;
+    private Array<Animation> walkAnimations;
     private Texture walkSheet;
     private TextureRegion[] walkFrames;
     private SpriteBatch spriteBatch;
@@ -246,7 +247,7 @@ public class Spiel_Screen extends Stage implements Screen {
         //Animation
         spriteBatch = new SpriteBatch();
         npcSpriteBatch = new SpriteBatch();
-        walkSheet = new Texture(Gdx.files.internal("runningcat.png")); // #9
+        /*walkSheet = new Texture(Gdx.files.internal("runningcat.png")); // #9
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS);              // #10
         walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
         int index = 0;
@@ -254,10 +255,23 @@ public class Spiel_Screen extends Stage implements Screen {
             for (int j = 0; j < FRAME_COLS; j++) {
                 walkFrames[index++] = tmp[i][j];
             }
+        }*/
+        walkSheet = new Texture(Gdx.files.internal("skeleton.png")); // #9
+        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS);              // #10
+        walkFrames = new TextureRegion[9 * 1];
+        walkAnimations = new Array<Animation>();
+        for (int i = 8; i < 12; i++){
+            for (int j = 0; j < 9; j++) {
+                walkFrames[j] = tmp[i][j];
+            }
+            walkAnimation = new Animation(0.2f, walkFrames);
+            walkAnimations.add(walkAnimation);
         }
-        walkAnimation = new Animation(0.2f, walkFrames);      // #11
+
+
+        //walkAnimation = new Animation(0.2f, walkFrames);      // #11
         stateTime = 0f;                         // #13
-        enemy = Enemy.createEnemy(walkAnimation);
+        enemy = Enemy.createEnemy(walkAnimations);
 
         //NPC startPosition
         //label.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
@@ -313,39 +327,27 @@ public class Spiel_Screen extends Stage implements Screen {
         //System.out.println("X   "+sourceImage.getX()+"Y"+ sourceImage.getY());
         renderer.render();
         stage.act(delta);
-        stage.draw();//
-
+        stage.draw();
 
         vec = getStageLocation(testbutton.get(2));
 
-        float scaleFactor = 0.5f;
-
-        angle = 0;
-        if (enemy.dir == Enemy.Dir.LEFT) {
-            angle = 180;
-            currentFrame.flip(false, true);
-        } else if (enemy.dir == Enemy.Dir.RIGHT) {
-            angle = 0;
-        } else if (enemy.dir == Enemy.Dir.UP) {
-            angle = 270;
-        } else if (enemy.dir == Enemy.Dir.DOWN) {
-            angle = 90;
-        }
+        float scaleFactor = 1.5f;
 
         npcSpriteBatch.begin();
         model.npc_route_running(ac, enemy, tiled_npc_fields);
+
         npcSpriteBatch.draw(currentFrame,
                 enemy.getX(),
                 enemy.getY(),
                 currentFrame.getRegionWidth() * scaleFactor,
                 currentFrame.getRegionHeight() * scaleFactor);
 
-        enemy.draw(npcSpriteBatch, delta);
+       // enemy.draw(npcSpriteBatch, delta);
 
 
         npcSpriteBatch.end();
 
-        currentFrame.flip(false, false);
+      //  currentFrame.flip(false,false);
 
 
 
