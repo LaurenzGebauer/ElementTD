@@ -417,11 +417,11 @@ public class Spiel_Screen extends Stage implements Screen {
         spriteBatch.end();
 
         for(int i = 0; i < towerrange.size; i++){
-            sr.begin(ShapeRenderer.ShapeType.Filled);
-            sr.setColor(Color.GREEN);
-            sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
-
-            sr.end();
+//            sr.begin(ShapeRenderer.ShapeType.Filled);
+//            sr.setColor(Color.GREEN);
+//            sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
+//
+//            sr.end();
             if(towerrange.get(i).contains(enemy.getX(),enemy.getY())){
                 System.out.println("LaurenzBOSSlifE");
 
