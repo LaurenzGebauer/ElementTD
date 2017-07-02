@@ -144,19 +144,19 @@
   <object id="111" x="224" y="544" width="160" height="128"/>
  </objectgroup>
  <objectgroup name="position">
-  <object id="126" x="448" y="0" width="32" height="32"/>
-  <object id="127" x="448" y="64" width="32" height="32"/>
+  <object id="126" x="448" y="-32" width="32" height="32"/>
+  <object id="127" x="448" y="96" width="32" height="32"/>
   <object id="128" x="128" y="96" width="32" height="32"/>
-  <object id="129" x="128" y="448" width="32" height="32"/>
-  <object id="130" x="448" y="448" width="32" height="32"/>
+  <object id="129" x="128" y="480" width="32" height="32"/>
+  <object id="130" x="448" y="480" width="32" height="32"/>
   <object id="131" x="448" y="352" width="32" height="32"/>
   <object id="132" x="928" y="352" width="32" height="32"/>
-  <object id="133" x="928" y="704" width="32" height="32"/>
+  <object id="133" x="928" y="736" width="32" height="32"/>
   <object id="134" x="128" y="736" width="32" height="32"/>
-  <object id="135" x="128" y="960" width="32" height="32"/>
-  <object id="136" x="1248" y="960" width="32" height="32"/>
+  <object id="135" x="128" y="992" width="32" height="32"/>
+  <object id="136" x="1248" y="992" width="32" height="32"/>
   <object id="137" x="1248" y="96" width="32" height="32"/>
-  <object id="138" x="768" y="64" width="32" height="32"/>
-  <object id="139" x="768" y="0" width="32" height="32"/>
+  <object id="138" x="768" y="96" width="32" height="32"/>
+  <object id="139" x="768" y="-32" width="32" height="32"/>
  </objectgroup>
 </map>
