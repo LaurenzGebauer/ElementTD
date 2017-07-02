@@ -162,9 +162,9 @@ public class Spiel_Screen extends Stage implements Screen {
 
         //Tower_Menu_Buttons werden Deklariert
 
-       /* tb = new ImageButton.ImageButtonStyle();
+        tb = new ImageButton.ImageButtonStyle();
         tb1 = new ImageButton.ImageButtonStyle();
-        tb2 = new ImageButton.ImageButtonStyle();*/
+        tb2 = new ImageButton.ImageButtonStyle();
         tb3 = new ImageButton.ImageButtonStyle();
         tb4 = new ImageButton.ImageButtonStyle();
         tb5 = new ImageButton.ImageButtonStyle();
@@ -172,10 +172,10 @@ public class Spiel_Screen extends Stage implements Screen {
         tb7 = new ImageButton.ImageButtonStyle();
         tb8 = new ImageButton.ImageButtonStyle();
         //Bilder werden den Tower_Buttons hinzugefügt
-        /*tb.up  = uiskin.getDrawable("arrow");
+        tb.up  = uiskin.getDrawable("arrow");
         testbuttonstyle.add(tb);
         tb2.up  = uiskin.getDrawable("cannon");
-        testbuttonstyle.add(tb2);*/
+        testbuttonstyle.add(tb2);
         tb3.up = elements.getDrawable("fire");
         testbuttonstyle.add(tb3);
         tb4.up = elements.getDrawable("water");
@@ -192,7 +192,7 @@ public class Spiel_Screen extends Stage implements Screen {
         testbutton = new Array<ImageButton>();
 
         Rectangle rec = new Rectangle();
-/*
+
          //Tower_Buttons werden der Tabelle hinzugfügt
           for(int i=0;i<menuicons.getRegions().size;i++){
                 ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
@@ -205,8 +205,8 @@ public class Spiel_Screen extends Stage implements Screen {
                          model.setMode(1);
                          model.setTowerNumberClicked= actor.getName();
                          model.changeTowerNumbertoName(model.setTowerNumberClicked);
-                 }});*/
-
+                 }});
+/*
         //Tower_Buttons werden der Tabelle hinzugfügt
         for (int i = 0; i < 6; i++) {
             ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
@@ -220,7 +220,7 @@ public class Spiel_Screen extends Stage implements Screen {
                     model.changeTowerNumbertoName(model.setTowerNumberClicked);
                 }
             });
-
+*/
 
             table2.add(testbutton.get(i)).pad(30);
             if (i == 1) {
