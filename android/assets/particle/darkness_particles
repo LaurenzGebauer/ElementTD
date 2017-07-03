@@ -138,4 +138,4 @@ additive: true
 behind: false
 premultipliedAlpha: false
 - Image Path -
-/C:/Users/Bernhard/Desktop/libgdx-nightly-latest/libgdx-nightly-latest/particle.png
+particle.png

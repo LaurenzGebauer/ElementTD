@@ -370,7 +370,7 @@ public class Spiel_Screen extends Stage implements Screen {
             towers.get(i).particleEffect.start();
             if(towers.get(i).showParticles){
                 towers.get(i).particleEffect.draw(npcSpriteBatch, delta);
-                towers.get(i).showParticles = false;
+                // towers.get(i).showParticles = false;
             }
         }
 
@@ -479,17 +479,28 @@ public class Spiel_Screen extends Stage implements Screen {
                 //sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
                 //sr.end();
             if(towers.get(i).getRange().contains(enemy.getX(),enemy.getY()) && enemy.isAlive){
-                fireDelay -= delta;
-                if (fireDelay <= 0) {
+                towers.get(i).fireDelay -= delta;
+                if (towers.get(i).fireDelay <= 0) {
                     System.out.println("Tower " + towers.get(i).type.toString() + " hit enemy with " + towers.get(i).getDamage() + " damage");
                     enemy.reduceHealthBy(towers.get(i).getDamage());
-                    fireDelay += towers.get(i).getFireDelay();
+                    towers.get(i).fireDelay += towers.get(i).getNextShotDelay();
                     //Setting the position of the ParticleEffect
-                    towers.get(i).particleEffect.setPosition(towers.get(i).getSprite().getX()+50, towers.get(i).getSprite().getY()+20);
+                    towers.get(i).particleEffect.setPosition(towers.get(i).getPositionx()+50, towers.get(i).getPositiony()+20);
                 }
                 towers.get(i).showParticles = true;
             }
+            else {
+                if (towers.get(i).fireDelay >= 0) {
+                    towers.get(i).fireDelay -= delta;
+                }
+                else {
+                    towers.get(i).fireDelay = 0f;
+                }
+                towers.get(i).showParticles = false;
+            }
         }
+
+
 
         //Back to Menu Screen
         Gdx.input.setCatchBackKey(true);
