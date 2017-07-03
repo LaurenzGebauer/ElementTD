@@ -103,25 +103,25 @@ public class Model {
     /**
      *
      * NPC's laufen Route ab
-     * @param npc
+     * @param enemy
      * @param rec
      */
-    public void npc_route_running(MoveToAction ac , Enemy npc, Array<Rectangle> rec) {
+    public void npc_route_running(MoveToAction ac , Enemy enemy, Array<Rectangle> rec) {
         for(int i = 1; i < rec.size; i++){
-            if ((int) npc.getX() == (int) rec.get(i).getX() && (int) npc.getY() == (int) rec.get(i).getY()) {
-                npc.removeAction(ac);
+            if ((int) enemy.getX() == (int) rec.get(i).getX() && (int) enemy.getY() == (int) rec.get(i).getY() && enemy.isAlive) {
+                enemy.removeAction(ac);
                 ac = new MoveToAction();
                 ac.setDuration(3);
                 if(i<rec.size-1){
-                    npc.setDir(checkDirection(rec.get(i), rec.get(i+1)));
+                    enemy.setDir(checkDirection(rec.get(i), rec.get(i+1)));
                     ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
                 }
                 else {
                     ac.setPosition(rec.get(i).x, rec.get(i).y);
                 }
-                npc.addAction(ac);
+                enemy.addAction(ac);
 
-                //npc.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
+                //enemy.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
             }
         }
     }

@@ -74,6 +74,7 @@ public class Spiel_Screen extends Stage implements Screen {
     private SpriteBatch npcSpriteBatch;
     private TextureRegion currentFrame;
     private float stateTime;
+    private Enemy enemy;
     private Array<Enemy> enemys = new Array<Enemy>();
     private Iterator<Enemy> enemyIterator;
     private int angle;
@@ -88,7 +89,7 @@ public class Spiel_Screen extends Stage implements Screen {
     private Vector2 vec;
     private Vector3 touchPoint;
     //Collision Detection und Movement Controll
-    private Array<Rectangle> tiled_tower_fields, tiled_npc_fields,towerrange;
+    private Array<Rectangle> tiled_tower_fields, tiled_npc_fields, towerrange;
     private TextureAtlas menu, towermenuicons;
 
     // Rounds
@@ -97,6 +98,8 @@ public class Spiel_Screen extends Stage implements Screen {
     private int goldReward = 1;
     private int enemyCounter = 0;
 
+    private int enemyLoopCounter = 0;
+
     // Time
     double lastSpawn = TimeUtils.nanoTime();
     double spawnFreq = TimeUtils.millisToNanos(3000);
@@ -104,11 +107,12 @@ public class Spiel_Screen extends Stage implements Screen {
     // Towers
     Array<ArrowTower> arrowTowers = new Array<ArrowTower>();
     private TextureAtlas ta;
+    // Tower fireRate
+    private float fireDelay;
 
     public TextureAtlas getTowermenuicons() {
         return towermenuicons;
     }
-
     public void setTowermenuicons(TextureAtlas towermenuicons) {
         this.towermenuicons = towermenuicons;
     }
@@ -301,11 +305,16 @@ public class Spiel_Screen extends Stage implements Screen {
             walkFrames = new TextureRegion[9 * 1];
         }
 
+
+
         walkFrames = new TextureRegion[6 * 1];
         for (int i = 0; i < 6; i++) {
             walkFrames[i] = tmp[FRAME_ROWS-1][i];
         }
         deadAnimation = new Animation(0.2f, walkFrames);
+        walkAnimations.add(deadAnimation);
+        changeRound();
+        enemy = Enemy.createEnemy(walkAnimations, health, goldReward);
 
         //walkAnimation = new Animation(0.2f, walkFrames);      // #11
         stateTime = 0f;                         // #13
@@ -314,23 +323,23 @@ public class Spiel_Screen extends Stage implements Screen {
 
         //NPC startPosition
         //label.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
-        //enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
+        enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
         ac = new MoveToAction();
         ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
         ac.setDuration(3);
         //label.addAction(ac);
-        //enemy.addAction(ac);
+        enemy.addAction(ac);
 
         //Listeners und Stage platzierungen
         //stage.addActor(arrowTower);
     //Listeners und Stage platzierungen
         //stage.addActor(arrowTower);
         //stage.addActor(label);
-        //stage.addActor(enemy);
 
+        stage.addActor(enemy);
         stage.addActor(table);
-        changeRound();
+
         /*for (int i = 0; i < enemys.size; i++) {
             stage.addActor(enemys.get(i));
         }*/
@@ -363,7 +372,8 @@ public class Spiel_Screen extends Stage implements Screen {
                 goldReward = 1;
                 break;
         }
-        enemyIterator = enemys.iterator();
+        //enemys = createEnemys(health, goldReward);
+        //enemyIterator = enemys.iterator();
     }
 
     public Array<Enemy> createEnemys(int health, int goldReward) {
@@ -411,10 +421,31 @@ public class Spiel_Screen extends Stage implements Screen {
         float scaleFactor = 2f;
 
         npcSpriteBatch.begin();
+        model.npc_route_running(ac, enemy, tiled_npc_fields);
+        enemy.draw(npcSpriteBatch, delta, stateTime);
+
+        /* does not work ... only one enemy is spawned and flashes while moving
+        if(TimeUtils.nanoTime() - lastSpawn > spawnFreq && enemyIterator.hasNext()) {
+            enemyIterator.next().setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
+            //enemyIterator.next().draw(npcSpriteBatch, delta, stateTime);
+        }
+        model.npc_route_running(ac, enemys.get(enemyLoopCounter), tiled_npc_fields);
+        enemys.get(enemyLoopCounter).draw(npcSpriteBatch, delta, stateTime);
+
+        enemyLoopCounter++;
+
+        if (enemyLoopCounter >= enemys.size) {
+            enemyLoopCounter = 0;
+        }
+
+        lastSpawn = TimeUtils.nanoTime();
+        */
+
+        /* does not work ... only one enemy is spawned and moves normally
         if((TimeUtils.nanoTime() - lastSpawn > spawnFreq) && enemyCounter <= 10) {
             //for (int i = 0; i < enemys.size; i++) {
             Enemy newEnemy = new Enemy(walkAnimations, health, goldReward);
-            stage.addActor(newEnemy);
+            //stage.addActor(newEnemy);
             newEnemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
             newEnemy.addAction(ac);
             enemys.add(newEnemy);
@@ -434,7 +465,7 @@ public class Spiel_Screen extends Stage implements Screen {
                         currentFrame.getRegionWidth() * scaleFactor,
                         currentFrame.getRegionHeight() * scaleFactor);
             }
-        }
+        }*/
         npcSpriteBatch.end();
 
          /*
@@ -467,9 +498,12 @@ public class Spiel_Screen extends Stage implements Screen {
 
                     model.setMode(0);
                     if(model.towercost<=goldzahl){
-                    arrowTowers.add(new ArrowTower(model.getTowerSprite(model.towerNameClicked), tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY()));
+                    arrowTowers.add(new ArrowTower(model.getTowerSprite(model.towerNameClicked),
+                            tiled_tower_fields.get(i).getX(),
+                            tiled_tower_fields.get(i).getY(),
+                            model.towerRange(tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY())));
 
-                    towerrange.add(model.towerRange(tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY()));
+                    //towerrange.add(model.towerRange(tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY()));
 
                     tiled_tower_fields.removeIndex(i);
 
@@ -491,19 +525,23 @@ public class Spiel_Screen extends Stage implements Screen {
 
         spriteBatch.end();
 
-        for(int i = 0; i < towerrange.size; i++){
+        for(int i = 0; i < arrowTowers.size; i++){
 //            sr.begin(ShapeRenderer.ShapeType.Filled);
 //            sr.setColor(Color.GREEN);
 //            sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
 //
 //            sr.end();
 
-            /*
-            TODO: Enemy enemy wurde durch Array<Enemy> enemys ersetzt
-            if(towerrange.get(i).contains(enemy.getX(),enemy.getY())){
-                System.out.println("LaurenzBOSSlifE");
+            // TODO: Enemy enemy wurde durch Array<Enemy> enemys ersetzt
+            if(arrowTowers.get(i).getRange().contains(enemy.getX(),enemy.getY()) && enemy.isAlive){
+                fireDelay -= delta;
+                if (fireDelay <= 0) {
+                    enemy.reduceHealthBy(arrowTowers.get(i).getDamage());
+                    System.out.println("LaurenzBOSSlifE");
+                    fireDelay += 1.0f;
+                }
             }
-            */
+
         }
 
 
