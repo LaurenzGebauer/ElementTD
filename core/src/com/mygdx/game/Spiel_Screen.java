@@ -268,16 +268,16 @@ public class Spiel_Screen extends Stage implements Screen {
         walkAnimations.add(deadAnimation);
         actionArray = new Array<MoveToAction>();
         changeRound();
-        enemy = Enemy.createEnemy(walkAnimations, health, goldReward);
+        //enemy = Enemy.createEnemy(walkAnimations, health, goldReward);
 
         stateTime = 0f;
          //NPC startPosition
-        enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
+        //enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
-        ac = new MoveToAction();
+        /*ac = new MoveToAction();
         ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
         ac.setDuration(3);
-        enemy.addAction(ac);
+        enemy.addAction(ac);*/
         //Partikel
         //TextureAtlas particleAtlas; //<-load some atlas with your particle assets in
         /*effect = new ParticleEffect();
@@ -287,7 +287,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
 
         //Actors werden auf der Stage platziert
-        stage.addActor(enemy);
+        // stage.addActor(enemy);
         stage.addActor(table);
 
         for (int i = 0; i < enemys.size; i++) {
@@ -360,13 +360,23 @@ public class Spiel_Screen extends Stage implements Screen {
         stage.draw();
 
         float scaleFactor = 2f;
+        for (int i = 0; i < enemys.size; i++){
+            if (enemys.get(i).aliveHasChanged) {
+                stateTime = 0f;
+                goldzahl += enemys.get(i).getGoldReward();
+                goldstand.setText("" + goldzahl);
+                enemys.get(i).aliveHasChanged = false;
+            }
+        }
 
+
+        /* works ... for single enemy
         if (enemy.aliveHasChanged) {
             stateTime = 0f;
             goldzahl += enemy.getGoldReward();
             goldstand.setText("" + goldzahl);
             enemy.aliveHasChanged = false;
-        }
+        } */
 
         spriteBatch.begin();
 
@@ -395,13 +405,13 @@ public class Spiel_Screen extends Stage implements Screen {
             }
 
             if (!enemys.get(i).isAlive && enemys.get(i).animatedNpc.isAnimationFinished(stateTime)) {
-                enemy.setVisible(false);
+                enemys.get(i).setVisible(false);
             }
         }
         /* works ... for single enemy
         model.npc_route_running(ac, enemy, tiled_npc_fields);
         if(enemy.isVisible()){
-            enemy.draw(npcSpriteBatch, delta, stateTime);
+            enemy.draw(spriteBatch, delta, stateTime);
         }
 
         if (!enemy.isAlive && enemy.animatedNpc.isAnimationFinished(stateTime)) {
@@ -413,10 +423,10 @@ public class Spiel_Screen extends Stage implements Screen {
         /* does not work ... only one enemy is spawned and flashes while moving
         if(TimeUtils.nanoTime() - lastSpawn > spawnFreq && enemyIterator.hasNext()) {
             enemyIterator.next().setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
-            //enemyIterator.next().draw(npcSpriteBatch, delta, stateTime);
+            //enemyIterator.next().draw(spriteBatch, delta, stateTime);
         }
         model.npc_route_running(ac, enemys.get(enemyLoopCounter), tiled_npc_fields);
-        enemys.get(enemyLoopCounter).draw(npcSpriteBatch, delta, stateTime);
+        enemys.get(enemyLoopCounter).draw(spriteBatch, delta, stateTime);
 
         enemyLoopCounter++;
 
@@ -445,7 +455,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
                 model.npc_route_running(ac, enemys.get(i), tiled_npc_fields);
 
-                npcSpriteBatch.draw(currentFrame,
+                spriteBatch.draw(currentFrame,
                         enemys.get(i).getX(),
                         enemys.get(i).getY(),
                         currentFrame.getRegionWidth() * scaleFactor,
@@ -453,18 +463,14 @@ public class Spiel_Screen extends Stage implements Screen {
             }
         }*/
 
-
          //Freie Flächen werden gezeichnet
-
          if(model.getMode() == model.DRAW_OPEN_FIELDS){
              if(model.towercost<=goldzahl) {
                  model.drawEmptyFields(this, ta, spriteBatch, tiled_tower_fields);
              }
          }
 
-
         //Draws selected Tower on Field
-
         if(model.getTowerplacementobserver()== model.towerinvalid) {
             for (int i = 0; i < tiled_tower_fields.size; i++) {
                 if (tiled_tower_fields.get(i).contains(actualTouchpos.x, actualTouchpos.y)) {

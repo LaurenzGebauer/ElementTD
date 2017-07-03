@@ -71,29 +71,7 @@ public class Model {
         }
          return starts;
     }
-    /**
-     *
-     * Label läuft Route ab
-     * @param label
-     * @param rec
-     */
-    public void npc_route_running(MoveToAction ac , Label label, Array<Rectangle> rec) {
-        for(int i = 1; i < rec.size; i++){
-            if ((int) label.getX() == (int) rec.get(i).x && (int) label.getY() == (int) rec.get(i).y) {
-                label.removeAction(ac);
-                ac = new MoveToAction();
-                ac.setDuration(3);
-                if(i<rec.size-1){
-                    ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
-                }
-                else {
-                    ac.setPosition(rec.get(i).x, rec.get(i).y);
-                }
-                label.addAction(ac);
-                //label.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
-            }
-        }
-    }
+
     /**
      *
      * NPC's laufen Route ab
@@ -186,9 +164,9 @@ public class Model {
     }
 
     public Rectangle towerRange(float x, float y, float width, float height){
-        Rectangle arrowRange = new Rectangle();
-        arrowRange.set(x-width/2,y-height/2,width,height);
-        return arrowRange;
+        Rectangle towerRange = new Rectangle();
+        towerRange.set(x-width/2,y-height/2,width,height);
+        return towerRange;
     }
 
     public TextureRegion textureRegionconverter(){
