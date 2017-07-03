@@ -182,10 +182,10 @@ public class Model {
      * @param i
      */
     public void drawTower(Array<Rectangle> r , int i){
-            start.getSpriteBatch().draw(textureRegionconverter(),r.get(i).x ,r.get(i).y);
+        start.getSpriteBatch().draw(textureRegionconverter(),r.get(i).x ,r.get(i).y);
     }
 
-    public Rectangle towerRange(float x, float y, int width, int height){
+    public Rectangle towerRange(float x, float y, float width, float height){
         Rectangle arrowRange = new Rectangle();
         arrowRange.set(x-width/2,y-height/2,width,height);
         return arrowRange;
@@ -208,43 +208,41 @@ public class Model {
             towercost=10;
             return "arrow";
         }
-        else
-        if(num==1){
+        else if(num==1){
             towerNameClicked= "cannon";
             towercost=15;
         }
-        else
-        if(num==2){
+        else if(num==2){
             towerNameClicked="fire";
             towercost=50;
         }
-        else
-        if(num==3){
+        else if(num==3){
             towerNameClicked= "water";
             towercost=50;
         }
-        else
-        if(num==4){
+        else if(num==4){
             towerNameClicked= "darkness";
             towercost=50;
         }
-        else
-        if(num==5){
+        else if(num==5){
             towerNameClicked= "light";
             towercost=50;
         }
-        else
-        if(num==6){
+        else if(num==6){
             towerNameClicked= "nature";
             towercost=50;
         }
-        else
-        if(num==7){
+        else if(num==7){
             towerNameClicked= "earth";
             towercost=50;
         }
-         return towerNameClicked;
-        }
+        return towerNameClicked;
+    }
+
+    public Tower.TowerType getTowerTypeFromName(String towerName){
+        Tower.TowerType type = Tower.TowerType.valueOf(towerName.toUpperCase());
+        return type;
+    }
 
     public int getMode() {
         return mMode;

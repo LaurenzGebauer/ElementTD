@@ -30,9 +30,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.Iterator;
 
 
 /**
@@ -42,7 +43,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Spiel_Screen extends Stage implements Screen {
 
     private Skin elements;
-     //MVC
+
+    //MVC
     private Model model;
     //Screen Elemente
     private KeyBack_Menu_Screen game;
@@ -65,6 +67,8 @@ public class Spiel_Screen extends Stage implements Screen {
     private SpriteBatch npcSpriteBatch;
     private float stateTime;
     private Enemy enemy;
+    private Array<Enemy> enemys = new Array<Enemy>();
+    private Iterator<Enemy> enemyIterator;
     //Gui- Elemente
     private Label gold, life,goldstand,lifestand;
     private int goldzahl;
@@ -76,15 +80,13 @@ public class Spiel_Screen extends Stage implements Screen {
     //Collision Detection und Movement Controll
     private Array<Rectangle> tiled_tower_fields, tiled_npc_fields, towerrange;
     private TextureAtlas menu, towermenuicons;
-    //Round
+
+    // Rounds
     private int round = 1;
     private int health = 1;
     private int goldReward = 1;
-    private int enemyCounter = 0;
-    private int enemyLoopCounter = 0;
-    // Time
-    double lastSpawn = TimeUtils.nanoTime();
-    double spawnFreq = TimeUtils.millisToNanos(3000);
+
+
     // Towers
     Array<Tower> towers = new Array<Tower>();
     private TextureAtlas ta;
@@ -242,15 +244,7 @@ public class Spiel_Screen extends Stage implements Screen {
         //Animation
         spriteBatch = new SpriteBatch();
         npcSpriteBatch = new SpriteBatch();
-        /*walkSheet = new Texture(Gdx.files.internal("runningcat.png")); // #9
-        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS);              // #10
-        walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-        int index = 0;
-        for (int i = 0; i < FRAME_ROWS; i++) {
-            for (int j = 0; j < FRAME_COLS; j++) {
-                walkFrames[index++] = tmp[i][j];
-            }
-        }*/
+
         walkSheet = new Texture(Gdx.files.internal("skeleton.png")); // #9
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS);              // #10
         walkFrames = new TextureRegion[9 * 1];
@@ -264,6 +258,7 @@ public class Spiel_Screen extends Stage implements Screen {
             walkFrames = new TextureRegion[9 * 1];
         }
 
+
         walkFrames = new TextureRegion[6 * 1];
         for (int i = 0; i < 6; i++) {
             walkFrames[i] = tmp[FRAME_ROWS-1][i];
@@ -273,16 +268,13 @@ public class Spiel_Screen extends Stage implements Screen {
         changeRound();
         enemy = Enemy.createEnemy(walkAnimations, health, goldReward);
 
-        //walkAnimation = new Animation(0.2f, walkFrames);      // #11
-        stateTime = 0f;                         // #13
+        stateTime = 0f;
          //NPC startPosition
-        //label.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
         ac = new MoveToAction();
         ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
         ac.setDuration(3);
-        //label.addAction(ac);
         enemy.addAction(ac);
 
         TextureAtlas particleAtlas; //<-load some atlas with your particle assets in
@@ -316,7 +308,7 @@ public class Spiel_Screen extends Stage implements Screen {
                 goldReward = 14;
                 break;
             case 4: // enemys = createEnemys(25, 19);
-                health = 20;
+                health = 25;
                 goldReward = 19;
                 break;
             case 5: // enemys = createEnemys(30, 24);
@@ -365,6 +357,8 @@ public class Spiel_Screen extends Stage implements Screen {
 
         if (enemy.aliveHasChanged) {
             stateTime = 0f;
+            goldzahl += enemy.getGoldReward();
+            goldstand.setText("" + goldzahl);
             enemy.aliveHasChanged = false;
         }
 
@@ -431,15 +425,6 @@ public class Spiel_Screen extends Stage implements Screen {
         }*/
         npcSpriteBatch.end();
 
-         /*
-        spriteBatch.begin();
-        model.npc_route_running(ac ,label, tiled_npc_fields);
-        //npc_route_running(label, tiled_npc_fields);
-        spriteBatch.draw(currentFrame, 0 , 0);
-
-        spriteBatch.end();
-        */
-
          //Freie Flächen werden gezeichnet
         spriteBatch.begin();
          if(model.getMode() == model.DRAW_OPEN_FIELDS){
@@ -457,19 +442,25 @@ public class Spiel_Screen extends Stage implements Screen {
                     //Freie Flächen werden nicht mehr angezeigt
                     model.setMode(0);
                     if(model.towercost<=goldzahl){
-                                //Platziert Tower
-                                towers.add(new Tower(model.getTowerSprite(model.towerNameClicked),
+                        //Tower erstellen
+                        Tower tower = Tower.createTower(model.getTowerTypeFromName(model.towerNameClicked),
+                                model.getTowerSprite(model.towerNameClicked),
                                 tiled_tower_fields.get(i).getX(),
                                 tiled_tower_fields.get(i).getY(),
-                                //Platziert Tower Reichweite
-                                model.towerRange(tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY(),400,400)));
-                                //Fläche wo tower Platziert wird ungültigt
-                                tiled_tower_fields.removeIndex(i);
-                                //Goldstand ändert sich
-                                goldzahl=goldzahl-model.towercost;
-                                goldstand.setText(""+goldzahl);
-                                //Tower aus Menü muss nach den Platzieren erneut ausgewählt werden
-                                model.setTowerplacementobserver(0);
+                                model.towerRange(tiled_tower_fields.get(i).getX(),
+                                    tiled_tower_fields.get(i).getY(),
+                                    tiled_tower_fields.get(i).getWidth() * 3 + 50,
+                                    tiled_tower_fields.get(i).getHeight() * 3 + 50));
+
+                        //Goldstand ändert sich
+                        goldzahl=goldzahl-tower.getCost();
+                        goldstand.setText(""+goldzahl);
+                        //Tower zu Array hinzufügen
+                        towers.add(tower);
+                        //Fläche wo tower platziert wurde, wird ungültigt
+                        tiled_tower_fields.removeIndex(i);
+                        //Tower aus Menü muss nach den Platzieren erneut ausgewählt werden
+                        model.setTowerplacementobserver(0);
                     }
                 }
             }
@@ -491,7 +482,7 @@ public class Spiel_Screen extends Stage implements Screen {
                 if (fireDelay <= 0) {
                     System.out.println("Enemy is hit");
                     enemy.reduceHealthBy(towers.get(i).getDamage());
-                    fireDelay += 1.0f;
+                    fireDelay += towers.get(i).getFireDelay();
                     //Setting the position of the ParticleEffect
                     effect.setPosition(towers.get(i).getPositionx()+50, towers.get(i).getPositiony()+20);
 
