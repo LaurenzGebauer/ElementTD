@@ -476,7 +476,6 @@ public class Spiel_Screen extends Stage implements Screen {
                 //sr.setColor(Color.GREEN);
                 //sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
                 //sr.end();
-                // TODO: Enemy enemy wurde durch Array<Enemy> enemys ersetzt
             if(towers.get(i).getRange().contains(enemy.getX(),enemy.getY()) && enemy.isAlive){
                 fireDelay -= delta;
                 if (fireDelay <= 0) {
