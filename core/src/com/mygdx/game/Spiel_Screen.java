@@ -422,7 +422,14 @@ public class Spiel_Screen extends Stage implements Screen {
 
         npcSpriteBatch.begin();
         model.npc_route_running(ac, enemy, tiled_npc_fields);
-        enemy.draw(npcSpriteBatch, delta, stateTime);
+        if(enemy.isAlive){
+            enemy.draw(npcSpriteBatch, delta, stateTime);
+        }
+        else {
+            while (!enemy.animatedNpc.isAnimationFinished(stateTime)){
+                enemy.draw(npcSpriteBatch, delta, stateTime);
+            }
+        }
 
         /* does not work ... only one enemy is spawned and flashes while moving
         if(TimeUtils.nanoTime() - lastSpawn > spawnFreq && enemyIterator.hasNext()) {

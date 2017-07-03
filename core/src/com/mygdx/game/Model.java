@@ -123,6 +123,9 @@ public class Model {
 
                 //enemy.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
             }
+            if (!enemy.isAlive) {
+                enemy.clear();
+            }
         }
     }
 
