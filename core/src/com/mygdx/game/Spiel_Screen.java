@@ -368,14 +368,14 @@ public class Spiel_Screen extends Stage implements Screen {
             enemy.aliveHasChanged = false;
         }
 
-        npcSpriteBatch.begin();
+        spriteBatch.begin();
 
         //Updating and Drawing the particle effect
         //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();
         for (int i = 0; i < towers.size; i++) {
             towers.get(i).particleEffect.start();
             if(towers.get(i).showParticles){
-                towers.get(i).particleEffect.draw(npcSpriteBatch, delta);
+                towers.get(i).particleEffect.draw(spriteBatch, delta);
                 // towers.get(i).showParticles = false;
             }
         }
@@ -391,7 +391,7 @@ public class Spiel_Screen extends Stage implements Screen {
             }*/
 
             if(enemys.get(i).isVisible()){
-                enemys.get(i).draw(npcSpriteBatch, delta, stateTime);
+                enemys.get(i).draw(spriteBatch, delta, stateTime);
             }
 
             if (!enemys.get(i).isAlive && enemys.get(i).animatedNpc.isAnimationFinished(stateTime)) {
@@ -452,19 +452,19 @@ public class Spiel_Screen extends Stage implements Screen {
                         currentFrame.getRegionHeight() * scaleFactor);
             }
         }*/
-        npcSpriteBatch.end();
+
 
          //Freie Flächen werden gezeichnet
-        spriteBatch.begin();
+
          if(model.getMode() == model.DRAW_OPEN_FIELDS){
              if(model.towercost<=goldzahl) {
                  model.drawEmptyFields(this, ta, spriteBatch, tiled_tower_fields);
              }
          }
-        spriteBatch.end();
+
 
         //Draws selected Tower on Field
-        spriteBatch.begin();
+
         if(model.getTowerplacementobserver()== model.towerinvalid) {
             for (int i = 0; i < tiled_tower_fields.size; i++) {
                 if (tiled_tower_fields.get(i).contains(actualTouchpos.x, actualTouchpos.y)) {
