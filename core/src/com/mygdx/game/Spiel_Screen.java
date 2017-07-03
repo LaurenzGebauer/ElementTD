@@ -276,10 +276,10 @@ public class Spiel_Screen extends Stage implements Screen {
         ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
         ac.setDuration(3);
         enemy.addAction(ac);
-
+//Partikel
         TextureAtlas particleAtlas; //<-load some atlas with your particle assets in
         effect = new ParticleEffect();
-        effect.load(Gdx.files.internal("particle/test"), Gdx.files.internal("particle"));
+        effect.load(Gdx.files.internal("particle/fire_particles"), Gdx.files.internal("particle"));
         effect.start();
 
 
