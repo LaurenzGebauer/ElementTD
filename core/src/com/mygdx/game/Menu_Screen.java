@@ -78,6 +78,9 @@ public class Menu_Screen implements Screen {
 
             }
         });
+
+
+        /*
         menu_screen_highscore_button.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 //Show Highscore Screen
@@ -85,6 +88,8 @@ public class Menu_Screen implements Screen {
                 System.out.println(actor.getName());
             }
         });
+*/
+
 
         //Wird der Stage hinzugefügt (Layout - Behälter)
         stage.addActor(menu_screen_button);
