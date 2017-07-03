@@ -121,7 +121,7 @@ public class Spiel_Screen extends Stage implements Screen {
     //private TextureAtlas towermenuicons;
     private TextureRegion tablem;
     private Skin uiskin;
-    private Array<ImageButton> testbutton;
+    private Array<ImageButton> towermenubutton;
     private ImageButton.ImageButtonStyle tb, tb1, tb2, tb3, tb4, tb5, tb6, tb7, tb8;
     private Table table;
     final Table table2 = new Table();
@@ -129,18 +129,18 @@ public class Spiel_Screen extends Stage implements Screen {
     private int mapPixelHeight, mapPixelWidth;
 
 
-    public Array<ImageButton> getTestbutton() {
-        return testbutton;
+    public Array<ImageButton> getTowermenubutton() {
+        return towermenubutton;
     }
 
 
-    private Array<ImageButton.ImageButtonStyle> testbuttonstyle;
+    private Array<ImageButton.ImageButtonStyle> towermenuButtonSkin;
 
     public Spiel_Screen(KeyBack_Menu_Screen g) {
         //MVC Objects
         this.game = g;
         model = new Model(this);
-        arrowTower = new ArrowTower();
+
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin.getFont("default-font").getData().setScale(3, 3);
 
@@ -176,10 +176,6 @@ public class Spiel_Screen extends Stage implements Screen {
 
         touchPoint = new Vector3();
 
-        skin.add("hero", new Texture("Hero.png"));
-
-     //sourceImage.setPosition(-20,-20);
-
         //label = new Label("NPC", skin);
         gold = new Label("Gold  :", skin);
         life = new Label("Life  :", skin);
@@ -207,7 +203,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
         towermenuicons = new TextureAtlas("elements.txt");
         uiskin = new Skin(towermenuicons);
-        testbuttonstyle = new Array<ImageButton.ImageButtonStyle>();
+        towermenuButtonSkin = new Array<ImageButton.ImageButtonStyle>();
 
         //Tower_Menu_Buttons werden Deklariert
 
@@ -222,32 +218,30 @@ public class Spiel_Screen extends Stage implements Screen {
         tb8 = new ImageButton.ImageButtonStyle();
         //Bilder werden den Tower_Buttons hinzugefügt
         tb.up  = uiskin.getDrawable("arrow");
-        testbuttonstyle.add(tb);
+        towermenuButtonSkin.add(tb);
         tb2.up  = uiskin.getDrawable("cannon");
-        testbuttonstyle.add(tb2);
+        towermenuButtonSkin.add(tb2);
         tb3.up = uiskin.getDrawable("fire");
-        testbuttonstyle.add(tb3);
+        towermenuButtonSkin.add(tb3);
         tb4.up = uiskin.getDrawable("water");
-        testbuttonstyle.add(tb4);
+        towermenuButtonSkin.add(tb4);
         tb5.up = uiskin.getDrawable("darkness");
-        testbuttonstyle.add(tb5);
+        towermenuButtonSkin.add(tb5);
         tb6.up = uiskin.getDrawable("light");
-        testbuttonstyle.add(tb6);
+        towermenuButtonSkin.add(tb6);
         tb7.up = uiskin.getDrawable("nature");
-        testbuttonstyle.add(tb7);
+        towermenuButtonSkin.add(tb7);
         tb8.up = uiskin.getDrawable("earth");
-        testbuttonstyle.add(tb8);
+        towermenuButtonSkin.add(tb8);
 
-        testbutton = new Array<ImageButton>();
+        towermenubutton = new Array<ImageButton>();
 
-
-
-         //Tower_Buttons werden der Tabelle hinzugfügt
+            //Tower_Buttons werden der Tabelle hinzugfügt
           for(int i = 0; i< towermenuicons.getRegions().size; i++){
-                ImageButton item1Button = new ImageButton(testbuttonstyle.get(i));
-                testbutton.add(item1Button);
-                testbutton.get(i).setName(""+i);
-                testbutton.get(i).addListener(new ChangeListener() {
+                    ImageButton item1Button = new ImageButton(towermenuButtonSkin.get(i));
+                    towermenubutton.add(item1Button);
+                    towermenubutton.get(i).setName(""+i);
+                    towermenubutton.get(i).addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
 
@@ -256,26 +250,24 @@ public class Spiel_Screen extends Stage implements Screen {
                          model.changeTowerNumbertoName(model.setTowerNumberClicked);
                          model.setTowerplacementobserver(1);
                  }});
-
-
-
-            table2.add(testbutton.get(i)).pad(30);
-            if (i == 1) {
-                table2.row();
-            }
-            if (i == 3) {
-                table2.row();
-            }
-            if (i == 5) {
-                table2.row();
-            }
-            if (i == 7) {
-                table2.row();
-            }
+                 //Tower Menu für die Tower Icons wird hergerichtet
+                 table2.add(towermenubutton.get(i)).pad(30);
+                    if (i == 1) {
+                        table2.row();
+                    }
+                    if (i == 3) {
+                        table2.row();
+                    }
+                    if (i == 5) {
+                        table2.row();
+                    }
+                    if (i == 7) {
+                        table2.row();
+                    }
         }
 
 
-                table2.setBackground(new TextureRegionDrawable(new TextureRegion(tablem)));
+        table2.setBackground(new TextureRegionDrawable(new TextureRegion(tablem)));
         table2.setHeight(stage.getHeight());
         table.add(table2);
         table.right();
@@ -319,10 +311,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
         //walkAnimation = new Animation(0.2f, walkFrames);      // #11
         stateTime = 0f;                         // #13
-
-
-
-        //NPC startPosition
+         //NPC startPosition
         //label.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
@@ -331,13 +320,7 @@ public class Spiel_Screen extends Stage implements Screen {
         ac.setDuration(3);
         //label.addAction(ac);
         enemy.addAction(ac);
-
-        //Listeners und Stage platzierungen
-        //stage.addActor(arrowTower);
-    //Listeners und Stage platzierungen
-        //stage.addActor(arrowTower);
-        //stage.addActor(label);
-
+        //Actors werden auf der Stage platziert
         stage.addActor(enemy);
         stage.addActor(table);
 
@@ -388,36 +371,23 @@ public class Spiel_Screen extends Stage implements Screen {
         return newEnemys;
     }
 
-    public static Vector2 getStageLocation(Actor actor) {
-        return actor.localToStageCoordinates(new Vector2(0, 0));
-    }
-
-
-
     @Override
     public void render(float delta) {
         //Prepare Screen
         Gdx.gl.glClearColor(0.55f, 0.55f, 0.55f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Vector3 mousePos = new Vector3(  Gdx.input.getX(), Gdx.input.getY(), 0);
-        camera.unproject(mousePos);
+        //Actual Position of the Touchpoints
+        Vector3 actualTouchpos = new Vector3(  Gdx.input.getX(), Gdx.input.getY(), 0);
+        camera.unproject(actualTouchpos);
         camera.update();
-
         //sr.setProjectionMatrix(camera.combined);
-
         renderer.setView(camera);
-
         //Animation Bewegung
         stateTime += Gdx.graphics.getDeltaTime();           // #15
         //currentFrame = (TextureRegion) walkAnimation.getKeyFrame(stateTime, true);  // #16
-
-
-        //System.out.println("X   "+sourceImage.getX()+"Y"+ sourceImage.getY());
         renderer.render();
         stage.act(delta);
         stage.draw();
-
-        vec = getStageLocation(testbutton.get(2));
 
         float scaleFactor = 2f;
 
@@ -489,84 +459,91 @@ public class Spiel_Screen extends Stage implements Screen {
         spriteBatch.end();
         */
 
+         //Freie Flächen werden gezeichnet
         spriteBatch.begin();
-
-
-
-//        towersprite = new TowerSprite(sprite, (int) mousePos.x,(int) mousePos.y);
-//        towersprite.getSprite().setTexture(texturearrow);
-//        towersprite.getSprite().draw(spriteBatch);
-
          if(model.getMode() == model.DRAW_OPEN_FIELDS){
-            model.drawEmptyFields(this,ta,spriteBatch, tiled_tower_fields);
-
-        }
+             if(model.towercost<=goldzahl) {
+                 model.drawEmptyFields(this, ta, spriteBatch, tiled_tower_fields);
+             }
+         }
         spriteBatch.end();
 
+        //Draws selected Tower on Field
         spriteBatch.begin();
         if(model.getTowerplacementobserver()== model.towerinvalid) {
             for (int i = 0; i < tiled_tower_fields.size; i++) {
-                if (tiled_tower_fields.get(i).contains(mousePos.x, mousePos.y)) {
-
+                if (tiled_tower_fields.get(i).contains(actualTouchpos.x, actualTouchpos.y)) {
+                    //Freie Flächen werden nicht mehr angezeigt
                     model.setMode(0);
                     if(model.towercost<=goldzahl){
-                    arrowTowers.add(new ArrowTower(model.getTowerSprite(model.towerNameClicked),
-                            tiled_tower_fields.get(i).getX(),
-                            tiled_tower_fields.get(i).getY(),
-                            model.towerRange(tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY())));
-
-                    //towerrange.add(model.towerRange(tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY()));
-
-                    tiled_tower_fields.removeIndex(i);
-
-                    // model.drawSprite(model.towerNameClicked,tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY());
-                      //arrowTower.draw(spriteBatch,mousePos.x, mousePos.y);
-
-                   // model.drawTower(tiled_tower_fields, i);
-                    model.setTowerplacementobserver(0);
-                    goldzahl=goldzahl-model.towercost;
-                    goldstand.setText(""+goldzahl);
-                }
+                                //Platziert Tower
+                                arrowTowers.add(new ArrowTower(model.getTowerSprite(model.towerNameClicked),
+                                tiled_tower_fields.get(i).getX(),
+                                tiled_tower_fields.get(i).getY(),
+                                //Platziert Tower Reichweite
+                                model.towerRange(tiled_tower_fields.get(i).getX(),tiled_tower_fields.get(i).getY(),400,400)));
+                                //Fläche wo tower Platziert wird ungültigt
+                                tiled_tower_fields.removeIndex(i);
+                                //Goldstand ändert sich
+                                goldzahl=goldzahl-model.towercost;
+                                goldstand.setText(""+goldzahl);
+                                //Tower aus Menü muss nach den Platzieren erneut ausgewählt werden
+                                model.setTowerplacementobserver(0);
+                    }
                 }
             }
-         }
+        }
 
         for (int i = 0; i < arrowTowers.size; i++) {
             arrowTowers.get(i).getSprite().draw(spriteBatch);
-        }
-
+            }
         spriteBatch.end();
 
         for(int i = 0; i < arrowTowers.size; i++){
-//            sr.begin(ShapeRenderer.ShapeType.Filled);
-//            sr.setColor(Color.GREEN);
-//            sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
-//
-//            sr.end();
-
-            // TODO: Enemy enemy wurde durch Array<Enemy> enemys ersetzt
+                //sr.begin(ShapeRenderer.ShapeType.Filled);
+                //sr.setColor(Color.GREEN);
+                //sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
+                //sr.end();
+                // TODO: Enemy enemy wurde durch Array<Enemy> enemys ersetzt
             if(arrowTowers.get(i).getRange().contains(enemy.getX(),enemy.getY()) && enemy.isAlive){
                 fireDelay -= delta;
                 if (fireDelay <= 0) {
                     enemy.reduceHealthBy(arrowTowers.get(i).getDamage());
-                    System.out.println("LaurenzBOSSlifE");
                     fireDelay += 1.0f;
                 }
             }
-
         }
-
-
-        /**
-         * Back to the first Screen
-         */
-        Gdx.input.setCatchBackKey(true);
+                //Back to Menu Screen
+                Gdx.input.setCatchBackKey(true);
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            game.setScreen(new Menu_Screen(game));
+                game.setScreen(new Menu_Screen(game));
         }
-
     }
 
+    @Override
+    public void show() {
+
+    }
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, false);
+    }
+    @Override
+    public void pause() {
+
+    }
+    @Override
+    public void resume() {
+
+    }
+    @Override
+    public void hide() {
+
+    }
+    @Override
+    public void dispose() {
+
+    }
     //Getter und Setter Methoden
     public Array<Rectangle> getTiled_npc_fields() {
         return tiled_npc_fields;
@@ -604,14 +581,14 @@ public class Spiel_Screen extends Stage implements Screen {
     public void setTouchPoint(Vector3 touchPoint) {
         this.touchPoint = touchPoint;
     }
-    public void setTestbutton(Array<ImageButton> testbutton) {
-        this.testbutton = testbutton;
+    public void setTowermenubutton(Array<ImageButton> towermenubutton) {
+        this.towermenubutton = towermenubutton;
     }
-    public Array<ImageButton.ImageButtonStyle> getTestbuttonstyle() {
-        return testbuttonstyle;
+    public Array<ImageButton.ImageButtonStyle> getTowermenuButtonSkin() {
+        return towermenuButtonSkin;
     }
-    public void setTestbuttonstyle(Array<ImageButton.ImageButtonStyle> testbuttonstyle) {
-        this.testbuttonstyle = testbuttonstyle;
+    public void setTowermenuButtonSkin(Array<ImageButton.ImageButtonStyle> towermenuButtonSkin) {
+        this.towermenuButtonSkin = towermenuButtonSkin;
     }
     public float getStateTime() {
         return stateTime;
@@ -619,36 +596,9 @@ public class Spiel_Screen extends Stage implements Screen {
     public void setStateTime(float stateTime) {
         this.stateTime = stateTime;
     }
-
-    @Override
-    public void show() {
-
-    }
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, false);
-    }
-    @Override
-    public void pause() {
-
-    }
-    @Override
-    public void resume() {
-
-    }
-    @Override
-    public void hide() {
-
-    }
-    @Override
-    public void dispose() {
-
-    }
-
     public SpriteBatch getSpriteBatch() {
         return spriteBatch;
     }
-
     public Skin getUiskin() {
         return uiskin;
     }

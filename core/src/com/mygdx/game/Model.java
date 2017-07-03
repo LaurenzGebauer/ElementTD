@@ -126,6 +126,7 @@ public class Model {
             if (!enemy.isAlive) {
                 enemy.clear();
             }
+
         }
     }
 
@@ -190,9 +191,9 @@ public class Model {
             start.getSpriteBatch().draw(textureRegionconverter(),r.get(i).x ,r.get(i).y);
     }
 
-    public Rectangle towerRange(float x, float y){
+    public Rectangle towerRange(float x, float y, int width, int height){
         Rectangle arrowRange = new Rectangle();
-        arrowRange.set(x-200,y-200,400,400);
+        arrowRange.set(x-width/2,y-height/2,width,height);
         return arrowRange;
     }
 

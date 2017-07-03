@@ -15,44 +15,18 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class ArrowTower {
 
-    Texture region;
-    TextureRegion tregion;
-
     private int damage = 5;
     protected Rectangle range;
-
     private Sprite sprite;
+    private float positionx;
+    private float positiony;
 
-    public Sprite getSprite() {
-        return sprite;
-    }
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-    public Rectangle getRange() {
-        return range;
-    }
-    public void setRange(Rectangle range) {
-        this.range = range;
-    }
-
-    public ArrowTower () {
-
-        region = new Texture(Gdx.files.internal("Hero.png"));
-        tregion= new TextureRegion(region);
-        this.sprite = new Sprite(region);
-    }
 
     public ArrowTower (Sprite sprite, float x, float y, Rectangle range) {
         this.sprite = sprite;
         this.sprite.setPosition(x, y);
+        this.positionx=x;
+        this.positiony=y;
         this.range = new Rectangle(range);
     }
 
@@ -66,6 +40,36 @@ public class ArrowTower {
         // range=+10;
     }
 
+    public Sprite getSprite() {
+        return sprite;
+    }
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+    }
+    public int getDamage() {
+        return damage;
+    }
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+    public Rectangle getRange() {
+        return range;
+    }
+    public void setRange(Rectangle range) {
+        this.range = range;
+    }
+    public float getPositionx() {
+        return positionx;
+    }
+    public void setPositionx(float positionx) {
+        this.positionx = positionx;
+    }
+    public float getPositiony() {
+        return positiony;
+    }
+    public void setPositiony(float positiony) {
+        this.positiony = positiony;
+    }
 }
 
 
