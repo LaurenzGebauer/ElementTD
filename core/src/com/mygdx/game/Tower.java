@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  * Created by Laurenz on 28.06.2017.
  */
 
-public class ArrowTower {
+public class Tower {
 
     private int damage = 5;
     protected Rectangle range;
@@ -22,7 +22,7 @@ public class ArrowTower {
     private float positiony;
 
 
-    public ArrowTower (Sprite sprite, float x, float y, Rectangle range) {
+    public Tower(Sprite sprite, float x, float y, Rectangle range) {
         this.sprite = sprite;
         this.sprite.setPosition(x, y);
         this.positionx=x;

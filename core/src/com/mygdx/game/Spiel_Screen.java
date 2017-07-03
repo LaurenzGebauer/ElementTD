@@ -22,7 +22,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -49,7 +48,7 @@ public class Spiel_Screen extends Stage implements Screen {
     //MVC
     private Model model;
     private Controller controller;
-    private ArrowTower arrowTower;
+    private Tower tower;
 
    // private TowerSprite towersprite;
     private Sprite sprite;
@@ -106,7 +105,7 @@ public class Spiel_Screen extends Stage implements Screen {
     double spawnFreq = TimeUtils.millisToNanos(3000);
 
     // Towers
-    Array<ArrowTower> arrowTowers = new Array<ArrowTower>();
+    Array<Tower> towers = new Array<Tower>();
     private TextureAtlas ta;
     // Tower fireRate
     private float fireDelay;
@@ -477,7 +476,7 @@ public class Spiel_Screen extends Stage implements Screen {
                     model.setMode(0);
                     if(model.towercost<=goldzahl){
                                 //Platziert Tower
-                                arrowTowers.add(new ArrowTower(model.getTowerSprite(model.towerNameClicked),
+                                towers.add(new Tower(model.getTowerSprite(model.towerNameClicked),
                                 tiled_tower_fields.get(i).getX(),
                                 tiled_tower_fields.get(i).getY(),
                                 //Platziert Tower Reichweite
@@ -494,21 +493,22 @@ public class Spiel_Screen extends Stage implements Screen {
             }
         }
 
-        for (int i = 0; i < arrowTowers.size; i++) {
-            arrowTowers.get(i).getSprite().draw(spriteBatch);
+        for (int i = 0; i < towers.size; i++) {
+            towers.get(i).getSprite().draw(spriteBatch);
             }
         spriteBatch.end();
 
-        for(int i = 0; i < arrowTowers.size; i++){
+        for(int i = 0; i < towers.size; i++){
                 //sr.begin(ShapeRenderer.ShapeType.Filled);
                 //sr.setColor(Color.GREEN);
                 //sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
                 //sr.end();
                 // TODO: Enemy enemy wurde durch Array<Enemy> enemys ersetzt
-            if(arrowTowers.get(i).getRange().contains(enemy.getX(),enemy.getY()) && enemy.isAlive){
+            if(towers.get(i).getRange().contains(enemy.getX(),enemy.getY()) && enemy.isAlive){
                 fireDelay -= delta;
                 if (fireDelay <= 0) {
-                    enemy.reduceHealthBy(arrowTowers.get(i).getDamage());
+                    System.out.println("Enemy is hit");
+                    enemy.reduceHealthBy(towers.get(i).getDamage());
                     fireDelay += 1.0f;
                 }
             }
