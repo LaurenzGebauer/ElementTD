@@ -279,7 +279,7 @@ public class Spiel_Screen extends Stage implements Screen {
 //Partikel
         TextureAtlas particleAtlas; //<-load some atlas with your particle assets in
         effect = new ParticleEffect();
-        effect.load(Gdx.files.internal("particle/fire_particles"), Gdx.files.internal("particle"));
+        effect.load(Gdx.files.internal("particle/arrow_particles"), Gdx.files.internal("particle"));
         effect.start();
 
 
