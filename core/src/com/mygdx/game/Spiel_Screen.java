@@ -276,11 +276,11 @@ public class Spiel_Screen extends Stage implements Screen {
         ac.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
         ac.setDuration(3);
         enemy.addAction(ac);
-//Partikel
-        TextureAtlas particleAtlas; //<-load some atlas with your particle assets in
-        effect = new ParticleEffect();
-        effect.load(Gdx.files.internal("particle/arrow_particles"), Gdx.files.internal("particle"));
-        effect.start();
+        //Partikel
+        //TextureAtlas particleAtlas; //<-load some atlas with your particle assets in
+        /*effect = new ParticleEffect();
+        effect.load(Gdx.files.internal("particle/fire_particles"), Gdx.files.internal("particle"));
+        effect.start();*/
 
 
 
@@ -296,7 +296,7 @@ public class Spiel_Screen extends Stage implements Screen {
     public void changeRound() {
         switch (round) {
             case 1: // enemys = createEnemys(10, 5);
-                health = 10;
+                health = 100;
                 goldReward = 5;
                 break;
             case 2: // enemys = createEnemys(15, 9);
@@ -364,13 +364,15 @@ public class Spiel_Screen extends Stage implements Screen {
 
         npcSpriteBatch.begin();
 
-        if(showparticle==1){
-            effect.draw(npcSpriteBatch, delta);
-        }
-
         //Updating and Drawing the particle effect
         //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();
-
+        for (int i = 0; i < towers.size; i++) {
+            towers.get(i).particleEffect.start();
+            if(towers.get(i).showParticles){
+                towers.get(i).particleEffect.draw(npcSpriteBatch, delta);
+                towers.get(i).showParticles = false;
+            }
+        }
 
         model.npc_route_running(ac, enemy, tiled_npc_fields);
         if(enemy.isVisible()){
@@ -468,7 +470,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
         for (int i = 0; i < towers.size; i++) {
             towers.get(i).getSprite().draw(spriteBatch);
-            }
+        }
         spriteBatch.end();
 
         for(int i = 0; i < towers.size; i++){
@@ -479,18 +481,18 @@ public class Spiel_Screen extends Stage implements Screen {
             if(towers.get(i).getRange().contains(enemy.getX(),enemy.getY()) && enemy.isAlive){
                 fireDelay -= delta;
                 if (fireDelay <= 0) {
-                    System.out.println("Enemy is hit");
+                    System.out.println("Tower " + towers.get(i).type.toString() + " hit enemy with " + towers.get(i).getDamage() + " damage");
                     enemy.reduceHealthBy(towers.get(i).getDamage());
                     fireDelay += towers.get(i).getFireDelay();
                     //Setting the position of the ParticleEffect
-                    effect.setPosition(towers.get(i).getPositionx()+50, towers.get(i).getPositiony()+20);
-
-                    showparticle=1;
+                    towers.get(i).particleEffect.setPosition(towers.get(i).getSprite().getX()+50, towers.get(i).getSprite().getY()+20);
                 }
+                towers.get(i).showParticles = true;
             }
         }
-                //Back to Menu Screen
-                Gdx.input.setCatchBackKey(true);
+
+        //Back to Menu Screen
+        Gdx.input.setCatchBackKey(true);
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
                 game.setScreen(new Menu_Screen(game));
         }
