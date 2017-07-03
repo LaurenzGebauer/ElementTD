@@ -21,7 +21,7 @@ public class Enemy extends Actor {
     protected Dir dir;
     protected boolean isAlive;
     protected boolean aliveHasChanged;
-    protected boolean isAnimationLooping;
+    protected boolean hasStarted;
 
 
     public Enemy(Array<Animation> animations, int health, int goldReward) {
@@ -32,7 +32,7 @@ public class Enemy extends Actor {
         this.dir = Dir.DOWN;
         this.isAlive = true;
         this.aliveHasChanged = false;
-        this.isAnimationLooping = true;
+        this.hasStarted = false;
     }
 
     protected enum Dir {

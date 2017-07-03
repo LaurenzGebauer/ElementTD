@@ -57,6 +57,7 @@ public class Spiel_Screen extends Stage implements Screen {
     private static final int FRAME_ROWS = 21;
     //Movement
     private MoveToAction ac;
+    private Array<MoveToAction> actionArray;
     //Animation
     private Animation walkAnimation;
     private Array<Animation> walkAnimations;
@@ -265,6 +266,7 @@ public class Spiel_Screen extends Stage implements Screen {
         }
         deadAnimation = new Animation(0.2f, walkFrames);
         walkAnimations.add(deadAnimation);
+        actionArray = new Array<MoveToAction>();
         changeRound();
         enemy = Enemy.createEnemy(walkAnimations, health, goldReward);
 
@@ -288,15 +290,15 @@ public class Spiel_Screen extends Stage implements Screen {
         stage.addActor(enemy);
         stage.addActor(table);
 
-        /*for (int i = 0; i < enemys.size; i++) {
+        for (int i = 0; i < enemys.size; i++) {
             stage.addActor(enemys.get(i));
-        }*/
+        }
     }
 
     public void changeRound() {
         switch (round) {
             case 1: // enemys = createEnemys(10, 5);
-                health = 100;
+                health = 10;
                 goldReward = 5;
                 break;
             case 2: // enemys = createEnemys(15, 9);
@@ -320,16 +322,20 @@ public class Spiel_Screen extends Stage implements Screen {
                 goldReward = 1;
                 break;
         }
-        //enemys = createEnemys(health, goldReward);
-        //enemyIterator = enemys.iterator();
+        enemys = createEnemys(health, goldReward);
+        // enemyIterator = enemys.iterator();
     }
 
     public Array<Enemy> createEnemys(int health, int goldReward) {
         Array<Enemy> newEnemys = new Array<Enemy>();
         for (int i = 0; i < 10; i++) {
+            MoveToAction singleAc = new MoveToAction();
+            singleAc.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
+            singleAc.setDuration(3);
+            actionArray.add(singleAc);
             Enemy singleEnemy = Enemy.createEnemy(this.walkAnimations, health, goldReward);
             singleEnemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
-            singleEnemy.addAction(ac);
+            singleEnemy.addAction(actionArray.get(i));
             newEnemys.add(singleEnemy);
         }
         return newEnemys;
@@ -373,7 +379,26 @@ public class Spiel_Screen extends Stage implements Screen {
                 // towers.get(i).showParticles = false;
             }
         }
+        for (int i = 0; i < enemys.size; i++) {
+            fireDelay -= delta;
+            if (fireDelay <= 0 /*&& !enemys.get(i).hasStarted*/) {
+                model.npc_route_running(actionArray.get(i), enemys.get(i), tiled_npc_fields);
+                fireDelay += 2.0f;
+                enemys.get(i).hasStarted = true;
+            }/*
+            else if(enemys.get(i).hasStarted) {
+                model.npc_route_running(actionArray.get(i), enemys.get(i), tiled_npc_fields);
+            }*/
 
+            if(enemys.get(i).isVisible()){
+                enemys.get(i).draw(npcSpriteBatch, delta, stateTime);
+            }
+
+            if (!enemys.get(i).isAlive && enemys.get(i).animatedNpc.isAnimationFinished(stateTime)) {
+                enemy.setVisible(false);
+            }
+        }
+        /* works ... for single enemy
         model.npc_route_running(ac, enemy, tiled_npc_fields);
         if(enemy.isVisible()){
             enemy.draw(npcSpriteBatch, delta, stateTime);
@@ -381,7 +406,9 @@ public class Spiel_Screen extends Stage implements Screen {
 
         if (!enemy.isAlive && enemy.animatedNpc.isAnimationFinished(stateTime)) {
             enemy.setVisible(false);
-        }
+        }*/
+
+
 
         /* does not work ... only one enemy is spawned and flashes while moving
         if(TimeUtils.nanoTime() - lastSpawn > spawnFreq && enemyIterator.hasNext()) {
@@ -474,6 +501,36 @@ public class Spiel_Screen extends Stage implements Screen {
         spriteBatch.end();
 
         for(int i = 0; i < towers.size; i++){
+            //sr.begin(ShapeRenderer.ShapeType.Filled);
+            //sr.setColor(Color.GREEN);
+            //sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
+            //sr.end();
+            for (int j = 0; j < enemys.size; j++) {
+                if(towers.get(i).getRange().contains(enemys.get(j).getX(), enemys.get(j).getY()) && enemys.get(j).isAlive){
+                    towers.get(i).fireDelay -= delta;
+                    if (towers.get(i).fireDelay <= 0) {
+                        System.out.println("Tower " + towers.get(i).type.toString() + " hit enemy with " + towers.get(i).getDamage() + " damage");
+                        enemys.get(j).reduceHealthBy(towers.get(i).getDamage());
+                        towers.get(i).fireDelay += towers.get(i).getNextShotDelay();
+                        //Setting the position of the ParticleEffect
+                        towers.get(i).particleEffect.setPosition(towers.get(i).getPositionx()+50, towers.get(i).getPositiony()+20);
+                    }
+                    towers.get(i).showParticles = true;
+                }
+                else {
+                    if (towers.get(i).fireDelay >= 0) {
+                        towers.get(i).fireDelay -= delta;
+                    }
+                    else {
+                        towers.get(i).fireDelay = 0f;
+                    }
+                    towers.get(i).showParticles = false;
+                }
+            }
+        }
+
+        /* works ... for single enemy
+        for(int i = 0; i < towers.size; i++){
                 //sr.begin(ShapeRenderer.ShapeType.Filled);
                 //sr.setColor(Color.GREEN);
                 //sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
@@ -498,7 +555,7 @@ public class Spiel_Screen extends Stage implements Screen {
                 }
                 towers.get(i).showParticles = false;
             }
-        }
+        } */
 
 
 
