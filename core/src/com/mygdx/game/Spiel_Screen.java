@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -39,9 +40,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 
 public class Spiel_Screen extends Stage implements Screen {
-    private Skin elements;
 
-    //MVC
+    private Skin elements;
+     //MVC
     private Model model;
     //Screen Elemente
     private KeyBack_Menu_Screen game;
@@ -75,32 +76,20 @@ public class Spiel_Screen extends Stage implements Screen {
     //Collision Detection und Movement Controll
     private Array<Rectangle> tiled_tower_fields, tiled_npc_fields, towerrange;
     private TextureAtlas menu, towermenuicons;
-
-    // Rounds
+    //Round
     private int round = 1;
     private int health = 1;
     private int goldReward = 1;
     private int enemyCounter = 0;
-
     private int enemyLoopCounter = 0;
-
     // Time
     double lastSpawn = TimeUtils.nanoTime();
     double spawnFreq = TimeUtils.millisToNanos(3000);
-
     // Towers
     Array<Tower> towers = new Array<Tower>();
     private TextureAtlas ta;
     // Tower fireRate
     private float fireDelay;
-
-    public TextureAtlas getTowermenuicons() {
-        return towermenuicons;
-    }
-    public void setTowermenuicons(TextureAtlas towermenuicons) {
-        this.towermenuicons = towermenuicons;
-    }
-
     //private TextureAtlas towermenuicons;
     private TextureRegion tablem;
     private Skin uiskin;
@@ -110,15 +99,9 @@ public class Spiel_Screen extends Stage implements Screen {
     final Table table2 = new Table();
     private Viewport viewport;
     private int mapPixelHeight, mapPixelWidth;
-
-
-    public Array<ImageButton> getTowermenubutton() {
-        return towermenubutton;
-    }
-
-
     private Array<ImageButton.ImageButtonStyle> towermenuButtonSkin;
-
+    private  ParticleEffect effect;
+    private  int showparticle;
     public Spiel_Screen(KeyBack_Menu_Screen g) {
         //MVC Objects
         this.game = g;
@@ -281,8 +264,6 @@ public class Spiel_Screen extends Stage implements Screen {
             walkFrames = new TextureRegion[9 * 1];
         }
 
-
-
         walkFrames = new TextureRegion[6 * 1];
         for (int i = 0; i < 6; i++) {
             walkFrames[i] = tmp[FRAME_ROWS-1][i];
@@ -303,6 +284,14 @@ public class Spiel_Screen extends Stage implements Screen {
         ac.setDuration(3);
         //label.addAction(ac);
         enemy.addAction(ac);
+
+        TextureAtlas particleAtlas; //<-load some atlas with your particle assets in
+        effect = new ParticleEffect();
+        effect.load(Gdx.files.internal("particle/test"), Gdx.files.internal("particle"));
+        effect.start();
+
+
+
         //Actors werden auf der Stage platziert
         stage.addActor(enemy);
         stage.addActor(table);
@@ -380,6 +369,15 @@ public class Spiel_Screen extends Stage implements Screen {
         }
 
         npcSpriteBatch.begin();
+
+        if(showparticle==1){
+            effect.draw(npcSpriteBatch, delta);
+        }
+
+        //Updating and Drawing the particle effect
+        //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();
+
+
         model.npc_route_running(ac, enemy, tiled_npc_fields);
         if(enemy.isVisible()){
             enemy.draw(npcSpriteBatch, delta, stateTime);
@@ -494,6 +492,10 @@ public class Spiel_Screen extends Stage implements Screen {
                     System.out.println("Enemy is hit");
                     enemy.reduceHealthBy(towers.get(i).getDamage());
                     fireDelay += 1.0f;
+                    //Setting the position of the ParticleEffect
+                    effect.setPosition(towers.get(i).getPositionx()+50, towers.get(i).getPositiony()+20);
+
+                    showparticle=1;
                 }
             }
         }
@@ -585,5 +587,14 @@ public class Spiel_Screen extends Stage implements Screen {
     }
     public Skin getUiskin() {
         return uiskin;
+    }
+    public Array<ImageButton> getTowermenubutton() {
+        return towermenubutton;
+    }
+     public TextureAtlas getTowermenuicons() {
+        return towermenuicons;
+    }
+    public void setTowermenuicons(TextureAtlas towermenuicons) {
+        this.towermenuicons = towermenuicons;
     }
 }
