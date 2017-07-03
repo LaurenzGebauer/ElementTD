@@ -146,7 +146,7 @@ public class Model {
      */
 
     public void drawEmptyFields(Spiel_Screen spiel_screen, TextureAtlas ta, SpriteBatch spriteBatch, Array<Rectangle> r){
-        ta=new TextureAtlas("freeTiles.txt");
+       ta=new TextureAtlas("freeTiles.txt");
        Texture freeTilesTexture = ta.findRegion("freeTiles").getTexture();
 
         for (int i = 0; i < r.size; i++) {

@@ -8,11 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -35,8 +33,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.Iterator;
-
 
 /**
  * Created by Laurenz on 15.11.2015.
@@ -47,12 +43,6 @@ public class Spiel_Screen extends Stage implements Screen {
 
     //MVC
     private Model model;
-    private Controller controller;
-    private Tower tower;
-
-   // private TowerSprite towersprite;
-    private Sprite sprite;
-    private Sprite banana;
     //Screen Elemente
     private KeyBack_Menu_Screen game;
     private Stage stage;
@@ -72,16 +62,10 @@ public class Spiel_Screen extends Stage implements Screen {
     private TextureRegion[] walkFrames;
     private SpriteBatch spriteBatch;
     private SpriteBatch npcSpriteBatch;
-    private TextureRegion currentFrame;
     private float stateTime;
     private Enemy enemy;
-    private Array<Enemy> enemys = new Array<Enemy>();
-    private Iterator<Enemy> enemyIterator;
-    private int angle;
-    //Shaperenderer
-    private ShapeRenderer sr;
     //Gui- Elemente
-    private Label label, gold, life,goldstand,lifestand;
+    private Label gold, life,goldstand,lifestand;
     private int goldzahl;
     private int lifezahl;
     private Image sourceImage;
@@ -194,7 +178,7 @@ public class Spiel_Screen extends Stage implements Screen {
         table2.add(lifestand).pad(15);
         table2.row();
 
-        sr = new ShapeRenderer();
+
 
         menu = new TextureAtlas("menu_bg.txt");
         //Tower_Menü Hintergrundbild
