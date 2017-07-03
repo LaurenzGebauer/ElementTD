@@ -20,6 +20,8 @@ public class Enemy extends Actor {
     private int goldReward;
     protected Dir dir;
     protected boolean isAlive;
+    protected boolean aliveHasChanged;
+    protected boolean isAnimationLooping;
 
 
     public Enemy(Array<Animation> animations, int health, int goldReward) {
@@ -29,6 +31,8 @@ public class Enemy extends Actor {
         this.goldReward = goldReward;
         this.dir = Dir.DOWN;
         this.isAlive = true;
+        this.aliveHasChanged = false;
+        this.isAnimationLooping = true;
     }
 
     protected enum Dir {
@@ -83,12 +87,13 @@ public class Enemy extends Actor {
         this.health -= damage;
         if (health <= 0) {
             this.isAlive = false;
+            this.aliveHasChanged = true;
             this.animatedNpc = this.animations.get(4);
         }
     }
 
     public void draw(Batch batch, float parentAlpha, float stateTime) {
-        TextureRegion currentFrame = (TextureRegion) this.animatedNpc.getKeyFrame(stateTime, true);
+        TextureRegion currentFrame = (TextureRegion) this.animatedNpc.getKeyFrame(stateTime, isAlive);
         batch.draw(currentFrame,
                 this.getX(),
                 this.getY(),

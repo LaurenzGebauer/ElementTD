@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -420,15 +421,19 @@ public class Spiel_Screen extends Stage implements Screen {
 
         float scaleFactor = 2f;
 
+        if (enemy.aliveHasChanged) {
+            stateTime = 0f;
+            enemy.aliveHasChanged = false;
+        }
+
         npcSpriteBatch.begin();
         model.npc_route_running(ac, enemy, tiled_npc_fields);
-        if(enemy.isAlive){
+        if(enemy.isVisible()){
             enemy.draw(npcSpriteBatch, delta, stateTime);
         }
-        else {
-            while (!enemy.animatedNpc.isAnimationFinished(stateTime)){
-                enemy.draw(npcSpriteBatch, delta, stateTime);
-            }
+
+        if (!enemy.isAlive && enemy.animatedNpc.isAnimationFinished(stateTime)) {
+            enemy.setVisible(false);
         }
 
         /* does not work ... only one enemy is spawned and flashes while moving
