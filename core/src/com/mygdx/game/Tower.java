@@ -36,10 +36,13 @@ public class Tower {
         this.cost = cost;
         this.sprite = sprite;
         this.sprite.setPosition(x, y);
-        this.particleEffect = particleEffect;
-        this.showParticles = false;
         this.positionx=x;
         this.positiony=y;
+        this.particleEffect = particleEffect;
+        this.particleEffect.setPosition(this.getPositionx()+50, this.getPositiony()+20);
+        this.particleEffect.scaleEffect(0.7f);
+        this.particleEffect.allowCompletion();
+        this.showParticles = false;
         this.range = new Rectangle(range);
     }
 

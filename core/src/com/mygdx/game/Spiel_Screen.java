@@ -151,7 +151,7 @@ public class Spiel_Screen extends Stage implements Screen {
         //label = new Label("NPC", skin);
         gold = new Label("Gold  :", skin);
         life = new Label("Life  :", skin);
-        goldzahl=20;
+        goldzahl=100;
         lifezahl=5;
         goldstand = new Label(""+goldzahl, skin);
         lifestand = new Label(""+lifezahl, skin);
@@ -369,15 +369,6 @@ public class Spiel_Screen extends Stage implements Screen {
         stage.draw();
 
         float scaleFactor = 2f;
-        for (int i = 0; i < enemys.size; i++){
-            if (enemys.get(i).aliveHasChanged) {
-                enemys.get(i).stateTime = 0f;
-                goldzahl += enemys.get(i).getGoldReward();
-                goldstand.setText("" + goldzahl);
-                enemys.get(i).aliveHasChanged = false;
-            }
-        }
-
 
         /* works ... for single enemy
         if (enemy.aliveHasChanged) {
@@ -392,17 +383,24 @@ public class Spiel_Screen extends Stage implements Screen {
         //Updating and Drawing the particle effect
         //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();
         for (int i = 0; i < towers.size; i++) {
-            towers.get(i).particleEffect.start();
             if(towers.get(i).showParticles){
+                towers.get(i).particleEffect.start();
                 towers.get(i).particleEffect.draw(spriteBatch, delta);
+                towers.get(i).particleEffect.update(delta);
                 // towers.get(i).showParticles = false;
             }
         }
         for (int i = 0; i < enemys.size; i++) {
+            if (enemys.get(i).aliveHasChanged) {
+                enemys.get(i).stateTime = 0f;
+                goldzahl += enemys.get(i).getGoldReward();
+                goldstand.setText("" + goldzahl);
+                enemys.get(i).aliveHasChanged = false;
+            }
             spawnDelay -= delta;
             if (spawnDelay <= 0 && !enemys.get(i).hasStarted) {
                 enemys.get(i).addAction(actionArray.get(i));
-                spawnDelay += 2.0f * TIME_CONSTANT;
+                spawnDelay += 1.0f * TIME_CONSTANT;
                 enemys.get(i).hasStarted = true;
             }
 
@@ -541,15 +539,13 @@ public class Spiel_Screen extends Stage implements Screen {
             //sr.end();
             for (int j = 0; j < enemys.size; j++) {
                 if(towers.get(i).getRange().contains(enemys.get(j).getX(), enemys.get(j).getY()) && enemys.get(j).isAlive){
+                    towers.get(i).showParticles = true;
                     towers.get(i).fireDelay -= delta;
                     if (towers.get(i).fireDelay <= 0) {
                         System.out.println("Tower " + towers.get(i).type.toString() + " hit enemy with " + towers.get(i).getDamage() + " damage");
                         enemys.get(j).reduceHealthBy(towers.get(i).getDamage());
                         towers.get(i).fireDelay += towers.get(i).getNextShotDelay() * TIME_CONSTANT;
-                        //Setting the position of the ParticleEffect
-                        towers.get(i).particleEffect.setPosition(towers.get(i).getPositionx()+50, towers.get(i).getPositiony()+20);
                     }
-                    towers.get(i).showParticles = true;
                 }
                 else {
                     if (towers.get(i).fireDelay >= 0) {
@@ -558,15 +554,19 @@ public class Spiel_Screen extends Stage implements Screen {
                     else {
                         towers.get(i).fireDelay = 0f;
                     }
-                    towers.get(i).showParticles = false;
+                    // towers.get(i).particleEffect.reset();
+                    //if (towers.get(i).particleEffect.isComplete()){
+                        towers.get(i).showParticles = false;
+                    //}
                 }
             }
         }
 
-
-        if (model.checkIfAllEnemysDead(enemys)) {
-            round += 1;
-            changeRound();
+        for (int i = 0; i < enemys.size; i++) {
+            if (model.checkIfAllEnemysDead(enemys) && !enemys.get(i).isVisible()) {
+                round += 1;
+                changeRound();
+            }
         }
 
 
