@@ -75,10 +75,10 @@ public class GameOver implements Screen {
         table.row();
 
 
-        table_bg.setRegionWidth((int) table.getWidth()/2);
-        table_bg.setRegionHeight((int) table.getHeight()/2);
+        //table_bg.setRegionWidth((int) table.getWidth()/2);
+        //table_bg.setRegionHeight((int) table.getHeight()/2);
 
-        table.setBackground(new TextureRegionDrawable(new TextureRegion(table_bg)));
+        //table.setBackground(new TextureRegionDrawable(new TextureRegion(table_bg)));
 
         //Wird der Stage hinzugefügt (Layout - Behälter)
         stage.addActor(table);

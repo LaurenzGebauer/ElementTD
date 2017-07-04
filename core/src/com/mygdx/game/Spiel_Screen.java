@@ -87,6 +87,7 @@ public class Spiel_Screen extends Stage implements Screen {
     private int health = 1;
     private int goldReward = 1;
 
+    private boolean nextRound = false;
 
     // Towers
     Array<Tower> towers = new Array<Tower>();
@@ -148,7 +149,7 @@ public class Spiel_Screen extends Stage implements Screen {
         //label = new Label("NPC", skin);
         gold = new Label("Gold  :", skin);
         life = new Label("Life  :", skin);
-        goldzahl=100;
+        goldzahl=20;
         lifezahl=5;
         goldstand = new Label(""+goldzahl, skin);
         lifestand = new Label(""+lifezahl, skin);
@@ -290,9 +291,6 @@ public class Spiel_Screen extends Stage implements Screen {
         // stage.addActor(enemy);
         stage.addActor(table);
 
-        for (int i = 0; i < enemys.size; i++) {
-            stage.addActor(enemys.get(i));
-        }
     }
 
     public void changeRound() {
@@ -320,15 +318,20 @@ public class Spiel_Screen extends Stage implements Screen {
             default: // enemys = createEnemys(1, 1);
                 health = 1;
                 goldReward = 1;
+                game.setScreen(new GameOver(game));
                 break;
         }
         enemys = createEnemys(health, goldReward);
+        for (int i = 0; i < enemys.size; i++) {
+            stage.addActor(enemys.get(i));
+        }
         // enemyIterator = enemys.iterator();
     }
 
     public Array<Enemy> createEnemys(int health, int goldReward) {
         Array<Enemy> newEnemys = new Array<Enemy>();
-        for (int i = 0; i < 10; i++) {
+        actionArray  = new Array<MoveToAction>();
+        for (int i = 0; i < 5; i++) {
             MoveToAction singleAc = new MoveToAction();
             singleAc.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
             singleAc.setDuration(3);
@@ -393,12 +396,27 @@ public class Spiel_Screen extends Stage implements Screen {
             fireDelay -= delta;
             if (fireDelay <= 0 /*&& !enemys.get(i).hasStarted*/) {
                 model.npc_route_running(actionArray.get(i), enemys.get(i), tiled_npc_fields);
-                fireDelay += 2.0f;
+                fireDelay += 5.0f;
                 enemys.get(i).hasStarted = true;
             }/*
             else if(enemys.get(i).hasStarted) {
                 model.npc_route_running(actionArray.get(i), enemys.get(i), tiled_npc_fields);
             }*/
+
+            if (enemys.get(i).getX() == tiled_npc_fields.get(tiled_npc_fields.size-1).getX() && enemys.get(i).getY() == tiled_npc_fields.get(tiled_npc_fields.size-1).getY()) {
+                enemys.get(i).isAlive = false;
+                enemys.removeIndex(i);
+                actionArray.removeIndex(i);
+                lifezahl -= 1;
+                lifestand.setText("" + lifezahl);
+                model.setLostLife(false);
+                if (i > 0) {
+                    i -= 1;
+                }
+            }
+            if (lifezahl <= 0) {
+                game.setScreen(new GameOver(game));
+            }
 
             if(enemys.get(i).isVisible()){
                 enemys.get(i).draw(spriteBatch, delta, stateTime);
@@ -408,6 +426,13 @@ public class Spiel_Screen extends Stage implements Screen {
                 enemys.get(i).setVisible(false);
             }
         }
+/*
+        if (model.isLostLife()) {
+            lifezahl -= 1;
+            lifestand.setText("" + lifezahl);
+            model.setLostLife(false);
+        }*/
+
         /* works ... for single enemy
         model.npc_route_running(ac, enemy, tiled_npc_fields);
         if(enemy.isVisible()){
@@ -465,7 +490,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
          //Freie Flächen werden gezeichnet
          if(model.getMode() == model.DRAW_OPEN_FIELDS){
-             if(model.towercost<=goldzahl) {
+             if(model.getTowerCost()<=goldzahl) {
                  model.drawEmptyFields(this, ta, spriteBatch, tiled_tower_fields);
              }
          }
@@ -476,7 +501,7 @@ public class Spiel_Screen extends Stage implements Screen {
                 if (tiled_tower_fields.get(i).contains(actualTouchpos.x, actualTouchpos.y)) {
                     //Freie Flächen werden nicht mehr angezeigt
                     model.setMode(0);
-                    if(model.towercost<=goldzahl){
+                    if(model.getTowerCost()<=goldzahl){
                         //Tower erstellen
                         Tower tower = Tower.createTower(model.getTowerTypeFromName(model.towerNameClicked),
                                 model.getTowerSprite(model.towerNameClicked),
@@ -533,6 +558,20 @@ public class Spiel_Screen extends Stage implements Screen {
                     towers.get(i).showParticles = false;
                 }
             }
+        }
+
+        for (int i = 0; i < enemys.size; i++) {
+            if (!enemys.get(i).isAlive) {
+                nextRound = true;
+            }
+            else {
+                nextRound = false;
+            }
+        }
+
+        if (nextRound) {
+            round += 1;
+            changeRound();
         }
 
         /* works ... for single enemy

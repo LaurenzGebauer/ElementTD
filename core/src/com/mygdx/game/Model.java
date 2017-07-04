@@ -28,6 +28,8 @@ public class Model {
 
     Sprite sprittower;
 
+    protected boolean lostLife = false;
+
 
 
     public int getTowerplacementobserver() {
@@ -83,13 +85,14 @@ public class Model {
             if ((int) enemy.getX() == (int) rec.get(i).getX() && (int) enemy.getY() == (int) rec.get(i).getY() && enemy.isAlive) {
                 enemy.removeAction(ac);
                 ac = new MoveToAction();
-                ac.setDuration(3);
+                ac.setDuration(2);
                 if(i<rec.size-1){
                     enemy.setDir(checkDirection(rec.get(i), rec.get(i+1)));
                     ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
                 }
                 else {
-                    ac.setPosition(rec.get(i).x, rec.get(i).y);
+                    enemy.clear();
+                    this.lostLife = true;
                 }
                 enemy.addAction(ac);
 
@@ -217,18 +220,27 @@ public class Model {
         return towerNameClicked;
     }
 
-    public Tower.TowerType getTowerTypeFromName(String towerName){
+    public Tower.TowerType getTowerTypeFromName (String towerName) {
         Tower.TowerType type = Tower.TowerType.valueOf(towerName.toUpperCase());
         return type;
+    }
+
+    public int getTowerCost () {
+        Tower.TowerType type = this.getTowerTypeFromName(towerNameClicked);
+        Tower tower = Tower.createTower(type, new Sprite(), 0, 0, new Rectangle());
+        return tower.getCost();
     }
 
     public int getMode() {
         return mMode;
     }
-
     public void setMode(int _mode) {
         mMode = _mode;
-
     }
-
+    public boolean isLostLife() {
+        return lostLife;
+    }
+    public void setLostLife(boolean lostLife) {
+        this.lostLife = lostLife;
+    }
 }
