@@ -54,7 +54,7 @@ public class Tower {
                 damage = 2;
                 nextShotDelay = 1.0f;
                 cost = 10;
-                effect.load(Gdx.files.internal("particle/test"), Gdx.files.internal("particle"));
+                effect.load(Gdx.files.internal("particle/arrow_particles"), Gdx.files.internal("particle"));
                 break;
             case CANNON:
                 damage = 3;
