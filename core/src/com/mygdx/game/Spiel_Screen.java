@@ -89,11 +89,13 @@ public class Spiel_Screen extends Stage implements Screen {
 
     private boolean nextRound = false;
 
+    private static final float TIME_CONSTANT = 5.0f;
+
     // Towers
     Array<Tower> towers = new Array<Tower>();
     private TextureAtlas ta;
-    // Tower fireRate
-    private float fireDelay;
+    // Enemy spawn delay
+    private float spawnDelay;
     //private TextureAtlas towermenuicons;
     private TextureRegion tablem;
     private Skin uiskin;
@@ -255,7 +257,7 @@ public class Spiel_Screen extends Stage implements Screen {
             for (int j = 0; j < 9; j++) {
                 walkFrames[j] = tmp[i][j];
             }
-            walkAnimation = new Animation(0.2f, walkFrames);
+            walkAnimation = new Animation(0.1f, walkFrames);
             walkAnimations.add(walkAnimation);
             walkFrames = new TextureRegion[9 * 1];
         }
@@ -265,13 +267,13 @@ public class Spiel_Screen extends Stage implements Screen {
         for (int i = 0; i < 6; i++) {
             walkFrames[i] = tmp[FRAME_ROWS-1][i];
         }
-        deadAnimation = new Animation(0.2f, walkFrames);
+        deadAnimation = new Animation(0.15f, walkFrames);
         walkAnimations.add(deadAnimation);
         actionArray = new Array<MoveToAction>();
         changeRound();
         //enemy = Enemy.createEnemy(walkAnimations, health, goldReward);
 
-        stateTime = 0f;
+        // stateTime = 0f;
          //NPC startPosition
         //enemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
         //MovetoAction wird aufgerufen und sagt wie sich das NPC bewegen soll
@@ -294,6 +296,9 @@ public class Spiel_Screen extends Stage implements Screen {
     }
 
     public void changeRound() {
+        enemys = new Array<Enemy>();
+        actionArray = new Array<MoveToAction>();
+        spawnDelay = 0.0f;
         switch (round) {
             case 1: // enemys = createEnemys(10, 5);
                 health = 10;
@@ -318,7 +323,7 @@ public class Spiel_Screen extends Stage implements Screen {
             default: // enemys = createEnemys(1, 1);
                 health = 1;
                 goldReward = 1;
-                game.setScreen(new GameOver(game));
+                game.setScreen(new WonScreen(game));
                 break;
         }
         enemys = createEnemys(health, goldReward);
@@ -330,16 +335,15 @@ public class Spiel_Screen extends Stage implements Screen {
 
     public Array<Enemy> createEnemys(int health, int goldReward) {
         Array<Enemy> newEnemys = new Array<Enemy>();
-        actionArray  = new Array<MoveToAction>();
         for (int i = 0; i < 5; i++) {
-            MoveToAction singleAc = new MoveToAction();
-            singleAc.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
-            singleAc.setDuration(3);
-            actionArray.add(singleAc);
             Enemy singleEnemy = Enemy.createEnemy(this.walkAnimations, health, goldReward);
             singleEnemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
-            singleEnemy.addAction(actionArray.get(i));
             newEnemys.add(singleEnemy);
+
+            MoveToAction singleAc = new MoveToAction();
+            singleAc.setPosition(tiled_npc_fields.get(1).x, tiled_npc_fields.get(1).y);
+            singleAc.setDuration(model.calcDurationOfMovement(singleEnemy.getX(), singleEnemy.getY(), singleAc.getX(), singleAc.getY()));
+            actionArray.add(singleAc);
         }
         return newEnemys;
     }
@@ -356,7 +360,9 @@ public class Spiel_Screen extends Stage implements Screen {
         //sr.setProjectionMatrix(camera.combined);
         renderer.setView(camera);
         //Animation Bewegung
-        stateTime += Gdx.graphics.getDeltaTime();           // #15
+        for (int i = 0; i < enemys.size; i++) {
+            enemys.get(i).stateTime += Gdx.graphics.getDeltaTime();           // #15
+        }
         //currentFrame = (TextureRegion) walkAnimation.getKeyFrame(stateTime, true);  // #16
         renderer.render();
         stage.act(delta);
@@ -365,7 +371,7 @@ public class Spiel_Screen extends Stage implements Screen {
         float scaleFactor = 2f;
         for (int i = 0; i < enemys.size; i++){
             if (enemys.get(i).aliveHasChanged) {
-                stateTime = 0f;
+                enemys.get(i).stateTime = 0f;
                 goldzahl += enemys.get(i).getGoldReward();
                 goldstand.setText("" + goldzahl);
                 enemys.get(i).aliveHasChanged = false;
@@ -393,37 +399,34 @@ public class Spiel_Screen extends Stage implements Screen {
             }
         }
         for (int i = 0; i < enemys.size; i++) {
-            fireDelay -= delta;
-            if (fireDelay <= 0 /*&& !enemys.get(i).hasStarted*/) {
-                model.npc_route_running(actionArray.get(i), enemys.get(i), tiled_npc_fields);
-                fireDelay += 5.0f;
+            spawnDelay -= delta;
+            if (spawnDelay <= 0 && !enemys.get(i).hasStarted) {
+                enemys.get(i).addAction(actionArray.get(i));
+                spawnDelay += 2.0f * TIME_CONSTANT;
                 enemys.get(i).hasStarted = true;
-            }/*
-            else if(enemys.get(i).hasStarted) {
-                model.npc_route_running(actionArray.get(i), enemys.get(i), tiled_npc_fields);
-            }*/
-
-            if (enemys.get(i).getX() == tiled_npc_fields.get(tiled_npc_fields.size-1).getX() && enemys.get(i).getY() == tiled_npc_fields.get(tiled_npc_fields.size-1).getY()) {
-                enemys.get(i).isAlive = false;
-                enemys.removeIndex(i);
-                actionArray.removeIndex(i);
-                lifezahl -= 1;
-                lifestand.setText("" + lifezahl);
-                model.setLostLife(false);
-                if (i > 0) {
-                    i -= 1;
-                }
             }
+
+            if (enemys.get(i).getActions() != null && enemys.get(i).isAlive) {
+                model.npc_route_running(actionArray.get(i), enemys.get(i), tiled_npc_fields);
+            }
+
+            if (enemys.get(i).getX() == tiled_npc_fields.get(tiled_npc_fields.size-1).getX() && enemys.get(i).getY() == tiled_npc_fields.get(tiled_npc_fields.size-1).getY() && enemys.get(i).isAlive) {
+                enemys.get(i).isAlive = false;
+                enemys.get(i).clear();
+                lifezahl -= 1;
+            }
+            lifestand.setText("" + lifezahl);
             if (lifezahl <= 0) {
                 game.setScreen(new GameOver(game));
             }
 
-            if(enemys.get(i).isVisible()){
-                enemys.get(i).draw(spriteBatch, delta, stateTime);
+            if (!enemys.get(i).isAlive && enemys.get(i).animatedNpc.isAnimationFinished(enemys.get(i).stateTime)) {
+                enemys.get(i).setVisible(false);
+                enemys.get(i).remove();
             }
 
-            if (!enemys.get(i).isAlive && enemys.get(i).animatedNpc.isAnimationFinished(stateTime)) {
-                enemys.get(i).setVisible(false);
+            if(enemys.get(i).isVisible()){
+                enemys.get(i).draw(spriteBatch, delta);
             }
         }
 /*
@@ -542,7 +545,7 @@ public class Spiel_Screen extends Stage implements Screen {
                     if (towers.get(i).fireDelay <= 0) {
                         System.out.println("Tower " + towers.get(i).type.toString() + " hit enemy with " + towers.get(i).getDamage() + " damage");
                         enemys.get(j).reduceHealthBy(towers.get(i).getDamage());
-                        towers.get(i).fireDelay += towers.get(i).getNextShotDelay();
+                        towers.get(i).fireDelay += towers.get(i).getNextShotDelay() * TIME_CONSTANT;
                         //Setting the position of the ParticleEffect
                         towers.get(i).particleEffect.setPosition(towers.get(i).getPositionx()+50, towers.get(i).getPositiony()+20);
                     }
@@ -560,19 +563,12 @@ public class Spiel_Screen extends Stage implements Screen {
             }
         }
 
-        for (int i = 0; i < enemys.size; i++) {
-            if (!enemys.get(i).isAlive) {
-                nextRound = true;
-            }
-            else {
-                nextRound = false;
-            }
-        }
 
-        if (nextRound) {
+        if (model.checkIfAllEnemysDead(enemys)) {
             round += 1;
             changeRound();
         }
+
 
         /* works ... for single enemy
         for(int i = 0; i < towers.size; i++){
@@ -581,22 +577,22 @@ public class Spiel_Screen extends Stage implements Screen {
                 //sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
                 //sr.end();
             if(towers.get(i).getRange().contains(enemy.getX(),enemy.getY()) && enemy.isAlive){
-                towers.get(i).fireDelay -= delta;
-                if (towers.get(i).fireDelay <= 0) {
+                towers.get(i).spawnDelay -= delta;
+                if (towers.get(i).spawnDelay <= 0) {
                     System.out.println("Tower " + towers.get(i).type.toString() + " hit enemy with " + towers.get(i).getDamage() + " damage");
                     enemy.reduceHealthBy(towers.get(i).getDamage());
-                    towers.get(i).fireDelay += towers.get(i).getNextShotDelay();
+                    towers.get(i).spawnDelay += towers.get(i).getNextShotDelay();
                     //Setting the position of the ParticleEffect
                     towers.get(i).particleEffect.setPosition(towers.get(i).getPositionx()+50, towers.get(i).getPositiony()+20);
                 }
                 towers.get(i).showParticles = true;
             }
             else {
-                if (towers.get(i).fireDelay >= 0) {
-                    towers.get(i).fireDelay -= delta;
+                if (towers.get(i).spawnDelay >= 0) {
+                    towers.get(i).spawnDelay -= delta;
                 }
                 else {
-                    towers.get(i).fireDelay = 0f;
+                    towers.get(i).spawnDelay = 0f;
                 }
                 towers.get(i).showParticles = false;
             }

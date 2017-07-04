@@ -15,7 +15,7 @@ public class Enemy extends Actor {
 
     protected Array<Animation> animations;
     protected Animation animatedNpc;
-    //protected TextureRegion currentFrame;
+    protected float stateTime;
     private int health;
     private int goldReward;
     protected Dir dir;
@@ -27,6 +27,7 @@ public class Enemy extends Actor {
     public Enemy(Array<Animation> animations, int health, int goldReward) {
         this.animations = animations;
         this.animatedNpc = animations.get(2);
+        this.stateTime = 0f;
         this.health = health;
         this.goldReward = goldReward;
         this.dir = Dir.DOWN;
@@ -88,16 +89,18 @@ public class Enemy extends Actor {
         if (health <= 0) {
             this.isAlive = false;
             this.aliveHasChanged = true;
+            this.clear();
             this.animatedNpc = this.animations.get(4);
         }
     }
 
-    public void draw(Batch batch, float parentAlpha, float stateTime) {
-        TextureRegion currentFrame = (TextureRegion) this.animatedNpc.getKeyFrame(stateTime, isAlive);
+    public void draw(Batch batch, float parentAlpha) {
+        TextureRegion currentFrame = (TextureRegion) this.animatedNpc.getKeyFrame(this.stateTime, isAlive);
+        float scaleFactor = 2.0f;
         batch.draw(currentFrame,
                 this.getX(),
                 this.getY(),
-                currentFrame.getRegionWidth() * 2.0f,
-                currentFrame.getRegionHeight() * 2.0f);
+                currentFrame.getRegionWidth() * scaleFactor,
+                currentFrame.getRegionHeight() * scaleFactor);
     }
 }

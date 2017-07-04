@@ -28,7 +28,7 @@ public class Model {
 
     Sprite sprittower;
 
-    protected boolean lostLife = false;
+    protected boolean allEnemysDead = false;
 
 
 
@@ -85,18 +85,13 @@ public class Model {
             if ((int) enemy.getX() == (int) rec.get(i).getX() && (int) enemy.getY() == (int) rec.get(i).getY() && enemy.isAlive) {
                 enemy.removeAction(ac);
                 ac = new MoveToAction();
-                ac.setDuration(2);
                 if(i<rec.size-1){
                     enemy.setDir(checkDirection(rec.get(i), rec.get(i+1)));
                     ac.setPosition(rec.get(i+1).x, rec.get(i+1).y);
+                    float time = calcDurationOfMovement(enemy.getX(), enemy.getY(), rec.get(i+1).x, rec.get(i+1).y);
+                    ac.setDuration(time);
+                    enemy.addAction(ac);
                 }
-                else {
-                    enemy.clear();
-                    this.lostLife = true;
-                }
-                enemy.addAction(ac);
-
-                //enemy.addAction(Actions.moveTo(starts.get(2).x, starts.get(2).y, 3));
             }
             if (!enemy.isAlive) {
                 enemy.clear();
@@ -116,6 +111,23 @@ public class Model {
             return Enemy.Dir.UP;
         }
         return null;
+    }
+
+    public static float calcDurationOfMovement(float x, float y, float nextX, float nextY) {
+        float distanceX = Math.abs(x - nextX);
+        float distanceY = Math.abs(y - nextY);
+        float distancePerSecond = 160.0f;
+        float time = (distanceX + distanceY) / distancePerSecond;
+        return time;
+    }
+
+    public boolean checkIfAllEnemysDead (Array<Enemy> enemys) {
+        for (int i = 0; i < enemys.size; i++) {
+            if (enemys.get(i).isAlive) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -236,11 +248,5 @@ public class Model {
     }
     public void setMode(int _mode) {
         mMode = _mode;
-    }
-    public boolean isLostLife() {
-        return lostLife;
-    }
-    public void setLostLife(boolean lostLife) {
-        this.lostLife = lostLife;
     }
 }
