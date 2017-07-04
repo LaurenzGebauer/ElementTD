@@ -28,7 +28,8 @@ public class Menu_Screen implements Screen {
     OrthographicCamera camera;
     private KeyBack_Menu_Screen game;
 
-    private TextButton menu_screen_button, menu_screen_highscore_button;
+    private TextButton menu_screen_button;
+    //private TextButton menu_screen_highscore_button;
     private Texture texture;
     private SpriteBatch batch;
 
@@ -61,11 +62,11 @@ public class Menu_Screen implements Screen {
         //Tabelle und Button wird erstellt und Positioniert
 //        Table table = new Table();
         menu_screen_button = new TextButton("Start Game", skin);
-        menu_screen_highscore_button = new TextButton("Highscore", skin);
+       // menu_screen_highscore_button = new TextButton("Highscore", skin);
         menu_screen_button.setSize(menu_screen_button.getWidth() + 300, menu_screen_button.getHeight() + 100);
-        menu_screen_highscore_button.setSize(menu_screen_highscore_button.getWidth() + 100, menu_screen_highscore_button.getHeight() + 100);
+       // menu_screen_highscore_button.setSize(menu_screen_highscore_button.getWidth() + 100, menu_screen_highscore_button.getHeight() + 100);
         menu_screen_button.setPosition(Gdx.graphics.getWidth() / 2 - menu_screen_button.getWidth() / 2, Gdx.graphics.getHeight() / 2 - menu_screen_button.getHeight() / 2); //Mitte von Bildschirm
-        menu_screen_highscore_button.setPosition(Gdx.graphics.getWidth() - 100 - menu_screen_button.getWidth() / 2, Gdx.graphics.getHeight() - 100 - menu_screen_button.getHeight() / 2); //Oben Rechts von Bildschirm
+       // menu_screen_highscore_button.setPosition(Gdx.graphics.getWidth() - 100 - menu_screen_button.getWidth() / 2, Gdx.graphics.getHeight() - 100 - menu_screen_button.getHeight() / 2); //Oben Rechts von Bildschirm
 
 
         //Hintergrundbild
@@ -93,7 +94,7 @@ public class Menu_Screen implements Screen {
 
         //Wird der Stage hinzugefügt (Layout - Behälter)
         stage.addActor(menu_screen_button);
-        stage.addActor(menu_screen_highscore_button);
+     //   stage.addActor(menu_screen_highscore_button);
 
 
     }
