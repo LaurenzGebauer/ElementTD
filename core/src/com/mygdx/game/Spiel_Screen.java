@@ -151,7 +151,7 @@ public class Spiel_Screen extends Stage implements Screen {
         //label = new Label("NPC", skin);
         gold = new Label("Gold  :", skin);
         life = new Label("Life  :", skin);
-        goldzahl=100;
+        goldzahl=30;
         lifezahl=5;
         goldstand = new Label(""+goldzahl, skin);
         lifestand = new Label(""+lifezahl, skin);
