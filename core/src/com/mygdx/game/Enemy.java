@@ -34,6 +34,7 @@ public class Enemy extends Actor {
         this.isAlive = true;
         this.aliveHasChanged = false;
         this.hasStarted = false;
+        this.setVisible(true);
     }
 
     protected enum Dir {

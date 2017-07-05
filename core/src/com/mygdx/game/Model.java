@@ -123,7 +123,7 @@ public class Model {
 
     public boolean checkIfAllEnemysDead (Array<Enemy> enemys) {
         for (int i = 0; i < enemys.size; i++) {
-            if (enemys.get(i).isAlive) {
+            if (enemys.get(i).isVisible()) {
                 return false;
             }
         }

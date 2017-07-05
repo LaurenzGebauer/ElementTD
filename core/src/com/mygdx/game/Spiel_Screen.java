@@ -420,19 +420,12 @@ public class Spiel_Screen extends Stage implements Screen {
 
             if (!enemys.get(i).isAlive && enemys.get(i).animatedNpc.isAnimationFinished(enemys.get(i).stateTime)) {
                 enemys.get(i).setVisible(false);
-                enemys.get(i).remove();
             }
 
             if(enemys.get(i).isVisible()){
                 enemys.get(i).draw(spriteBatch, delta);
             }
         }
-/*
-        if (model.isLostLife()) {
-            lifezahl -= 1;
-            lifestand.setText("" + lifezahl);
-            model.setLostLife(false);
-        }*/
 
         /* works ... for single enemy
         model.npc_route_running(ac, enemy, tiled_npc_fields);
@@ -444,50 +437,6 @@ public class Spiel_Screen extends Stage implements Screen {
             enemy.setVisible(false);
         }*/
 
-
-
-        /* does not work ... only one enemy is spawned and flashes while moving
-        if(TimeUtils.nanoTime() - lastSpawn > spawnFreq && enemyIterator.hasNext()) {
-            enemyIterator.next().setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
-            //enemyIterator.next().draw(spriteBatch, delta, stateTime);
-        }
-        model.npc_route_running(ac, enemys.get(enemyLoopCounter), tiled_npc_fields);
-        enemys.get(enemyLoopCounter).draw(spriteBatch, delta, stateTime);
-
-        enemyLoopCounter++;
-
-        if (enemyLoopCounter >= enemys.size) {
-            enemyLoopCounter = 0;
-        }
-
-        lastSpawn = TimeUtils.nanoTime();
-        */
-
-        /* does not work ... only one enemy is spawned and moves normally
-        if((TimeUtils.nanoTime() - lastSpawn > spawnFreq) && enemyCounter <= 10) {
-            //for (int i = 0; i < enemys.size; i++) {
-            Enemy newEnemy = new Enemy(walkAnimations, health, goldReward);
-            //stage.addActor(newEnemy);
-            newEnemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
-            newEnemy.addAction(ac);
-            enemys.add(newEnemy);
-            enemyCounter++;
-            lastSpawn = TimeUtils.nanoTime();
-        }
-
-        if(enemys.size != 0){
-            for (int i = 0; i < enemys.size; i++) {
-                currentFrame = (TextureRegion) enemys.get(i).animatedNpc.getKeyFrame(stateTime, true);
-
-                model.npc_route_running(ac, enemys.get(i), tiled_npc_fields);
-
-                spriteBatch.draw(currentFrame,
-                        enemys.get(i).getX(),
-                        enemys.get(i).getY(),
-                        currentFrame.getRegionWidth() * scaleFactor,
-                        currentFrame.getRegionHeight() * scaleFactor);
-            }
-        }*/
 
          //Freie Flächen werden gezeichnet
          if(model.getMode() == model.DRAW_OPEN_FIELDS){
@@ -533,10 +482,6 @@ public class Spiel_Screen extends Stage implements Screen {
         spriteBatch.end();
 
         for(int i = 0; i < towers.size; i++){
-            //sr.begin(ShapeRenderer.ShapeType.Filled);
-            //sr.setColor(Color.GREEN);
-            //sr.rect(towerrange.get(i).x,towerrange.get(i).y , towerrange.get(i).width,towerrange.get(i).height);
-            //sr.end();
             for (int j = 0; j < enemys.size; j++) {
                 if(towers.get(i).getRange().contains(enemys.get(j).getX(), enemys.get(j).getY()) && enemys.get(j).isAlive){
                     towers.get(i).showParticles = true;
@@ -545,6 +490,7 @@ public class Spiel_Screen extends Stage implements Screen {
                         System.out.println("Tower " + towers.get(i).type.toString() + " hit enemy with " + towers.get(i).getDamage() + " damage");
                         enemys.get(j).reduceHealthBy(towers.get(i).getDamage());
                         towers.get(i).fireDelay += towers.get(i).getNextShotDelay() * TIME_CONSTANT;
+                        towers.get(i).particleEffect.reset();
                     }
                 }
                 else {
@@ -562,11 +508,9 @@ public class Spiel_Screen extends Stage implements Screen {
             }
         }
 
-        for (int i = 0; i < enemys.size; i++) {
-            if (model.checkIfAllEnemysDead(enemys) && !enemys.get(i).isVisible()) {
-                round += 1;
-                changeRound();
-            }
+        if (model.checkIfAllEnemysDead(enemys)) {
+            round += 1;
+            changeRound();
         }
 
 
