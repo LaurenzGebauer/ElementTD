@@ -84,10 +84,9 @@ public class Spiel_Screen extends Stage implements Screen {
 
     // Rounds
     private int round = 1;
+    private int enemycount = 5;
     private int health = 1;
     private int goldReward = 1;
-
-    private boolean nextRound = false;
 
     private static final float TIME_CONSTANT = 5.0f;
 
@@ -257,7 +256,7 @@ public class Spiel_Screen extends Stage implements Screen {
             for (int j = 0; j < 9; j++) {
                 walkFrames[j] = tmp[i][j];
             }
-            walkAnimation = new Animation(0.1f, walkFrames);
+            walkAnimation = new Animation(0.15f, walkFrames);
             walkAnimations.add(walkAnimation);
             walkFrames = new TextureRegion[9 * 1];
         }
@@ -335,7 +334,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
     public Array<Enemy> createEnemys(int health, int goldReward) {
         Array<Enemy> newEnemys = new Array<Enemy>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < enemycount; i++) {
             Enemy singleEnemy = Enemy.createEnemy(this.walkAnimations, health, goldReward);
             singleEnemy.setPosition(tiled_npc_fields.get(0).x, tiled_npc_fields.get(0).y);
             newEnemys.add(singleEnemy);
@@ -420,6 +419,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
             if (!enemys.get(i).isAlive && enemys.get(i).animatedNpc.isAnimationFinished(enemys.get(i).stateTime)) {
                 enemys.get(i).setVisible(false);
+                enemys.get(i).remove();
             }
 
             if(enemys.get(i).isVisible()){
@@ -510,6 +510,7 @@ public class Spiel_Screen extends Stage implements Screen {
 
         if (model.checkIfAllEnemysDead(enemys)) {
             round += 1;
+            enemycount += 1;
             changeRound();
         }
 
