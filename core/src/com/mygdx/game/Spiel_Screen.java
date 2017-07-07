@@ -85,8 +85,8 @@ public class Spiel_Screen extends Stage implements Screen {
     // Rounds
     private int round = 1;
     private int enemycount = 5;
-    private int health = 1;
-    private int goldReward = 1;
+    private int health = 5;
+    private int goldReward = 0;
 
     private static final float TIME_CONSTANT = 5.0f;
 
@@ -256,7 +256,7 @@ public class Spiel_Screen extends Stage implements Screen {
             for (int j = 0; j < 9; j++) {
                 walkFrames[j] = tmp[i][j];
             }
-            walkAnimation = new Animation(0.15f, walkFrames);
+            walkAnimation = new Animation(0.1f, walkFrames);
             walkAnimations.add(walkAnimation);
             walkFrames = new TextureRegion[9 * 1];
         }
@@ -299,30 +299,32 @@ public class Spiel_Screen extends Stage implements Screen {
         actionArray = new Array<MoveToAction>();
         spawnDelay = 0.0f;
         switch (round) {
-            case 1: // enemys = createEnemys(10, 5);
+            /*case 1:
                 health = 10;
                 goldReward = 5;
                 break;
-            case 2: // enemys = createEnemys(15, 9);
+            case 2:
                 health = 15;
                 goldReward = 9;
                 break;
-            case 3: // enemys = createEnemys(20, 14);
+            case 3:
                 health = 20;
                 goldReward = 14;
                 break;
-            case 4: // enemys = createEnemys(25, 19);
+            case 4:
                 health = 25;
                 goldReward = 19;
                 break;
-            case 5: // enemys = createEnemys(30, 24);
+            case 5:
                 health = 30;
                 goldReward = 24;
+                break;*/
+            case 20: game.setScreen(new WonScreen(game));
                 break;
-            default: // enemys = createEnemys(1, 1);
-                health = 1;
-                goldReward = 1;
-                game.setScreen(new WonScreen(game));
+            default:
+                health += 5;
+                goldReward += 3;
+                //game.setScreen(new WonScreen(game));
                 break;
         }
         enemys = createEnemys(health, goldReward);
@@ -399,7 +401,7 @@ public class Spiel_Screen extends Stage implements Screen {
             spawnDelay -= delta;
             if (spawnDelay <= 0 && !enemys.get(i).hasStarted) {
                 enemys.get(i).addAction(actionArray.get(i));
-                spawnDelay += 1.0f * TIME_CONSTANT;
+                spawnDelay += (float)enemys.size - 1.0f;
                 enemys.get(i).hasStarted = true;
             }
 
@@ -459,8 +461,8 @@ public class Spiel_Screen extends Stage implements Screen {
                                 tiled_tower_fields.get(i).getY(),
                                 model.towerRange(tiled_tower_fields.get(i).getX(),
                                     tiled_tower_fields.get(i).getY(),
-                                    tiled_tower_fields.get(i).getWidth() * 3 + 50,
-                                    tiled_tower_fields.get(i).getHeight() * 3 + 50));
+                                    tiled_tower_fields.get(i).getWidth() * 3,
+                                    tiled_tower_fields.get(i).getHeight() * 3));
 
                         //Goldstand ändert sich
                         goldzahl=goldzahl-tower.getCost();

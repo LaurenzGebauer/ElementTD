@@ -116,7 +116,7 @@ public class Model {
     public static float calcDurationOfMovement(float x, float y, float nextX, float nextY) {
         float distanceX = Math.abs(x - nextX);
         float distanceY = Math.abs(y - nextY);
-        float distancePerSecond = 160.0f;
+        float distancePerSecond = 180.0f;
         float time = (distanceX + distanceY) / distancePerSecond;
         return time;
     }

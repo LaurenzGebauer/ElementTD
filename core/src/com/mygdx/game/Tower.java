@@ -54,25 +54,25 @@ public class Tower {
 
         switch (type) {
             case ARROW:
-                damage = 2;
+                damage = 3;
                 nextShotDelay = 1.0f;
                 cost = 10;
                 effect.load(Gdx.files.internal("particle/arrow_particles"), Gdx.files.internal("particle"));
                 break;
             case CANNON:
-                damage = 3;
-                nextShotDelay = 1.4f;
+                damage = 5;
+                nextShotDelay = 1.3f;
                 cost = 15;
                 effect.load(Gdx.files.internal("particle/cannon_particles"), Gdx.files.internal("particle"));
                 break;
             case FIRE:
-                damage = 5;
+                damage = 6;
                 nextShotDelay = 2.0f;
                 cost = 30;
                 effect.load(Gdx.files.internal("particle/fire_particles"), Gdx.files.internal("particle"));
                 break;
             case WATER:
-                damage = 7;
+                damage = 8;
                 nextShotDelay = 2.3f;
                 cost = 35;
                 effect.load(Gdx.files.internal("particle/water_particles"), Gdx.files.internal("particle"));
